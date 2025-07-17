@@ -17,7 +17,7 @@
     <% @wohnungs.each do |wohnung| %>
       <div class="card">
         <!-- Make the entire card clickable and link to the show page of the wohnung -->
-        <%= link_to wohnung_path(wohnung) do %>
+       <%= link_to wohnung_path(wohnung), class: "wohnung-card-link" do %>
           <!-- Render individual wohnung details -->
           <%= render wohnung %>
 

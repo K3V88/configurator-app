@@ -7,7 +7,7 @@
 
 .big-container {
   display: flex;
-  width: 100%;
+  width: 80%;
   height: 100%;
   flex-direction: column;
   justify-content: center; /* Vertically center */
@@ -54,19 +54,19 @@
 
   h2 {
     margin-top: 0;
-    font-size: 2rem;
+    font-size: 4rem;
     color: #333;
   }
 
-  h1 {
-    margin-top: 0;
-    font-size: 2rem;
-    color: #ffffff;
-  }
+ .wohnung-name h1 {
+  font-size: 3rem;  /* Adjust this value as needed */
+  font-weight: bold; /* Optional: makes it bold */
+}
 
   p {
     color: #666;
     font-size: 1.1rem;
+    text-decoration: none;
   }
 
   /* Styling for the image */
@@ -111,7 +111,7 @@
   flex-direction: row;
   width: 700px;
   border: 1px solid #070404;
-  height: 300px;
+  height: auto;
 }
 
 .custom-btn {
@@ -140,7 +140,7 @@
 
  .wohnung-name {
     font-family: 'Bebas Neue', sans-serif; /* catchy, modern font */
-    font-size: 40px;  /* large, bold font size */
+    font-size: 60px;  /* large, bold font size */
     color: #2c3e50; /* rich dark tone */
     letter-spacing: 1px;
     margin: 20px 0;
@@ -150,3 +150,9 @@
     font-weight: 700;
     margin-right: 8px;
   }
+
+  .wohnung-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
