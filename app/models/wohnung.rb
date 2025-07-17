@@ -1,0 +1,2 @@
+class Wohnung < ApplicationRecord
+end
