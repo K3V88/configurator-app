@@ -1,14 +1,39 @@
-<p style="color: green"><%= notice %></p>
+<%= notice %>
 
-<h1>Wohnungs</h1>
+<!-- Displaying wohnungs in a horizontally scrollable row -->
+<div class="big-container">
+  <div class="card-container">
 
-<div id="wohnungs">
-  <% @wohnungs.each do |wohnung| %>
-    <%= render wohnung %>
-    <p>
-      <%= link_to "Show this wohnung", wohnung %>
+    <!-- Page Title -->
+    <h1 style="color: black; font-family: 'Lora', serif;">Property Showcase</h1>
+
+    <!-- Professional description -->
+    <p style="color: white; font-family: 'Avenir', sans-serif; font-size: 1.1rem; max-width: 800px; margin-bottom: 2rem; line-height: 1.6;">
+      Configure your new, personalized home in just a few steps: Start by selecting your condominium.
+      Then, depending on the unit, you can customize the layout, choose an interior style, and select optional upgrades.
+      Finally, you'll receive a comprehensive overview of your dream property.
     </p>
+
+    <% @wohnungs.each do |wohnung| %>
+      <div class="card">
+        <!-- Make the entire card clickable and link to the show page of the wohnung -->
+        <%= link_to wohnung_path(wohnung) do %>
+          <!-- Render individual wohnung details -->
+          <%= render wohnung %>
+
+          <!-- Check if user exists before trying to display their email -->
+
+        <% end %>
+
+       <div class="actions">
+  <% if user_signed_in? && wohnung.user == current_user %>
+    <%= link_to "Edit", edit_wohnung_path(wohnung), class: "btn custom-btn btn-outline-dark" %>
+    <%= button_to "Delete", wohnung, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn custom-btn btn-outline-danger" %>
   <% end %>
 </div>
+      </div>
+    <% end %>
 
-<%= link_to "New wohnung", new_wohnung_path %>
+    <%= link_to 'Create New Wohnung', new_wohnung_path, class: 'btn btn-primary mb-3' %>
+  </div>
+</div>

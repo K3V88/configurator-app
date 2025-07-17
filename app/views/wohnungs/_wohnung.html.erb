@@ -1,12 +1,17 @@
-<div id="<%= dom_id wohnung %>">
-  <p>
-    <strong>Name:</strong>
-    <%= wohnung.name %>
-  </p>
+<div class="details-container">
+  <div class="wohnung-image">
+    <% if wohnung.image.attached? %>
+      <%= image_tag wohnung.image, class: "img-fluid" %>
+    <% end %>
+  </div>
 
-  <p>
-    <strong>Description:</strong>
-    <%= wohnung.description %>
-  </p>
+  <div class="wohnung-details">
+    <p class="wohnung-name"><strong>Name:</strong> <%= wohnung.name %></p>
+    <p><%= wohnung.description %></p>
+
+
+  </div>
 
 </div>
+
+<div class="wohnung-location"><p class="created-by">Created by: <%= wohnung.user.try(:email) || "Unknown" %></p>📍 Location: <%= wohnung.location %></div>

@@ -1,10 +1,32 @@
-<p style="color: green"><%= notice %></p>
+<%= notice %>
 
-<%= render @wohnung %>
+<!-- Displaying the wohnung details in a large centered container -->
+<div class="big-container">
+  <div class="card-container">
+    <div class="card">
+      <!-- Render individual wohnung details here -->
+      <h2><%= @wohnung.name %></h2>
+      <p><%= @wohnung.description %></p>
 
-<div>
-  <%= link_to "Edit this wohnung", edit_wohnung_path(@wohnung) %> |
-  <%= link_to "Back to wohnungs", wohnungs_path %>
+      <!-- Additional property details -->
+      <div class="categories">
+        <p><strong>Price:</strong> <%= number_to_currency(@wohnung.price) %></p>
+        <p><strong>Size:</strong> <%= @wohnung.size %> m²</p>
+        <p><strong>Location:</strong> <%= @wohnung.location %></p>
+        <p><strong>Year Built:</strong> <%= @wohnung.year_built %></p>
+      </div>
 
-  <%= button_to "Destroy this wohnung", @wohnung, method: :delete %>
+      <!-- Check if user exists before trying to display their email -->
+      <p class="created-by">Created by: <%= @wohnung.user.try(:email) || "Unknown" %></p>
+
+      <div class="actions">
+         <%= link_to "Back to wohnungs", wohnungs_path %>
+        <% if user_signed_in? && @wohnung.user == current_user %>
+
+          <%= link_to "Edit this wohnung", edit_wohnung_path(@wohnung), class: "btn btn-warning" %> |
+          <%= button_to "Destroy this wohnung", @wohnung, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
