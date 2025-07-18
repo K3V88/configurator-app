@@ -1,51 +1,55 @@
-<%= form_with(model: wohnung, local: true) do |form| %>
-  <% if wohnung.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(wohnung.errors.count, "error") %> prohibited this wohnung from being saved:</h2>
-      <ul>
-        <% wohnung.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<div class="container mt-5 d-flex justify-content-center">
+  <div class="w-100 formulier" style="max-width: 600px;">
+    <%= form_with(model: wohnung, local: true) do |form| %>
+      <% if wohnung.errors.any? %>
+        <div id="error_explanation" class="alert alert-danger">
+          <h5><%= pluralize(wohnung.errors.count, "error") %> prevented this wohnung from being saved:</h5>
+          <ul class="mb-0">
+            <% wohnung.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
 
-  <div class="form-group">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "form-control" %>
-  </div>
+      <div class="mb-3">
+        <%= form.label :name, class: "form-label" %>
+        <%= form.text_field :name, class: "form-control form-control-sm" %>
+      </div>
 
-  <div class="form-group">
-  <%= form.label :image %>
-  <%= form.file_field :image, class: "form-control" %>
-  </div>
+      <div class="mb-3">
+        <%= form.label :image, class: "form-label" %>
+        <%= form.file_field :image, class: "form-control form-control-sm" %>
+      </div>
 
-  <div class="form-group">
-    <%= form.label :description %>
-    <%= form.text_area :description, class: "form-control", rows: 4 %>
-  </div>
+      <div class="mb-3">
+        <%= form.label :description, class: "form-label" %>
+        <%= form.text_area :description, class: "form-control form-control-sm", rows: 4 %>
+      </div>
 
-  <div class="form-group">
-    <%= form.label :price %>
-    <%= form.number_field :price, step: "0.01", class: "form-control" %>
-  </div>
+      <div class="mb-3">
+        <%= form.label :price, class: "form-label" %>
+        <%= form.number_field :price, step: "0.01", class: "form-control form-control-sm" %>
+      </div>
 
-  <div class="form-group">
-    <%= form.label :size, "Size (in m²)" %>
-    <%= form.number_field :size, step: "0.1", class: "form-control" %>
-  </div>
+      <div class="mb-3">
+        <%= form.label :size, "Size (in m²)", class: "form-label" %>
+        <%= form.number_field :size, step: "0.1", class: "form-control form-control-sm" %>
+      </div>
 
-  <div class="form-group">
-    <%= form.label :location %>
-    <%= form.text_field :location, class: "form-control" %>
-  </div>
+      <div class="mb-3">
+        <%= form.label :location, class: "form-label" %>
+        <%= form.text_field :location, class: "form-control form-control-sm" %>
+      </div>
 
-  <div class="form-group">
-    <%= form.label :year_built, "Year Built" %>
-    <%= form.select :year_built, (1900..Date.today.year).to_a.reverse, { include_blank: "Select Year" }, class: "form-control" %>
-  </div>
+      <div class="mb-3">
+        <%= form.label :year_built, "Year Built", class: "form-label" %>
+        <%= form.select :year_built, (1900..Date.today.year).to_a.reverse, { include_blank: "Select Year" }, class: "form-select form-select-sm" %>
+      </div>
 
-  <div class="form-group">
-    <%= form.submit "Save Wohnung", class: "btn btn-primary" %>
+      <div class="d-grid">
+        <%= form.submit "Save Wohnung", class: "btn btn-primary btn-sm" %>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>

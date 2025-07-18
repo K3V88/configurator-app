@@ -6,6 +6,9 @@
     <div class="card">
       <!-- Render individual wohnung details here -->
       <h2><%= @wohnung.name %></h2>
+      <% if @wohnung.image.attached? %>
+  <%= image_tag @wohnung.image, class: "img-fluid mb-3", alt: @wohnung.name %>
+<% end %>
       <p><%= @wohnung.description %></p>
 
       <!-- Additional property details -->
@@ -19,14 +22,17 @@
       <!-- Check if user exists before trying to display their email -->
       <p class="created-by">Created by: <%= @wohnung.user.try(:email) || "Unknown" %></p>
 
-      <div class="actions">
-         <%= link_to "Back to wohnungs", wohnungs_path %>
-        <% if user_signed_in? && @wohnung.user == current_user %>
+     <div class="actions mt-4 d-flex flex-column flex-sm-row align-items-center gap-2">
+  <%= link_to "← Back to properties", wohnungs_path, class: "btn btn-secondary btn-sm" %>
 
-          <%= link_to "Edit this wohnung", edit_wohnung_path(@wohnung), class: "btn btn-warning" %> |
-          <%= button_to "Destroy this wohnung", @wohnung, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
-        <% end %>
-      </div>
+  <% if user_signed_in? && @wohnung.user == current_user %>
+    <%= link_to "✏️ Edit this property", edit_wohnung_path(@wohnung), class: "btn btn-secondary btn-sm" %>
+
+    <%= button_to "🗑️ Delete this property", @wohnung, method: :delete,
+          data: { confirm: 'Are you sure you want to permanently delete this property?' },
+          class: "btn btn-secondary btn-sm" %>
+  <% end %>
+</div>
     </div>
   </div>
 </div>
