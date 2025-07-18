@@ -1,2 +1,15 @@
 @import "bootstrap";
 @import "cards";
+
+.price-slider {
+  margin-bottom: 20px;
+}
+
+#price-range {
+  width: 50%;
+}
+
+#price-display {
+  margin-left: 10px;
+  font-weight: bold;
+}
