@@ -13,10 +13,11 @@
 
       <!-- Additional property details -->
       <div class="categories">
-        <p><strong>Price:</strong> <%= number_to_currency(@wohnung.price) %></p>
-        <p><strong>Size:</strong> <%= @wohnung.size %> m²</p>
-        <p><strong>Location:</strong> <%= @wohnung.location %></p>
-        <p><strong>Year Built:</strong> <%= @wohnung.year_built %></p>
+      <p><strong>Price:</strong> <%= number_to_currency(@wohnung.price) %></p>
+      <p><strong>Size:</strong> <%= @wohnung.size %> m²</p>
+      <p><strong>Location:</strong> <%= @wohnung.location %></p>
+      <p><strong>Year Built:</strong> <%= @wohnung.year_built %></p>
+      <p><strong>Rooms:</strong> <%= @wohnung.rooms %> </p> <!-- New Rooms Field -->
       </div>
 
       <!-- Check if user exists before trying to display their email -->

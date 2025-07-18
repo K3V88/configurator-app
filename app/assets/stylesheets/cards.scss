@@ -32,6 +32,7 @@ body {
   flex-wrap: nowrap;
   gap: 1rem;
   padding: 2rem;  /* Increased padding for more space */
+  min-width: 800px; /* Ensure a minimum width for the container */
 }
 
 /* Individual Wohnung card styling */
@@ -112,9 +113,9 @@ body {
 .details-container {
   display: flex;
   flex-direction: row;
-  width: 700px;
-  border: 1px solid #070404;
+  width: auto;
   height: auto;
+  border: none;
 }
 
 .custom-btn {
@@ -157,10 +158,20 @@ body {
   .wohnung-card-link {
   text-decoration: none;
   color: inherit;
-  display: block;
 }
 
 .formulier {
   border-radius: 0.375rem;
-  border: 1px solid #092036;
+  padding: 20px;
+  border: 1px solid rgb(255, 255, 255);
+}
+
+a.wohnung-card-link {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit color from parent or set a custom color */
+  display: block; /* Make the anchor take up full width of its parent (optional) */
+  padding: 15px; /* Add padding if needed */
+  background-color: #f8f9fa; /* Light background color */
+  border-radius: 5px; /* Optional: Rounded corners */
+  transition: all 0.3s ease; /* Smooth transition for any change */
 }

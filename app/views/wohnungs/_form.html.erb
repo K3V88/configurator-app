@@ -42,6 +42,11 @@
         <%= form.text_field :location, class: "form-control form-control-sm" %>
       </div>
 
+      <div class="form-group">
+      <%= form.label :rooms, "Number of Rooms" %>
+      <%= form.number_field :rooms, step: 0.5, min: 0.5, class: "form-control" %>
+      </div>
+
       <div class="mb-3">
         <%= form.label :year_built, "Year Built", class: "form-label" %>
         <%= form.select :year_built, (1900..Date.today.year).to_a.reverse, { include_blank: "Select Year" }, class: "form-select form-select-sm" %>

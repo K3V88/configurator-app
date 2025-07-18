@@ -80,6 +80,6 @@ class WohnungsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def wohnung_params
-      params.require(:wohnung).permit(:name, :description, :price, :size, :location, :year_built, :image)
+      params.require(:wohnung).permit(:name, :description, :price, :size, :location, :year_built, :image, :rooms)
     end
 end
