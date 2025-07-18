@@ -25,12 +25,7 @@
 
         <% end %>
 
-       <div class="actions">
-  <% if user_signed_in? && wohnung.user == current_user %>
-    <%= link_to "Edit", edit_wohnung_path(wohnung), class: "btn custom-btn btn-outline-dark" %>
-    <%= button_to "Delete", wohnung, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn custom-btn btn-outline-danger" %>
-  <% end %>
-</div>
+
       </div>
     <% end %>
 

@@ -1,39 +1,40 @@
 <%= notice %>
 
 <!-- Displaying the wohnung details in a large centered container -->
-<div class="big-container">
+<div class="big-container" id="wohnung_<%= @wohnung.id %>">
   <div class="card-container">
     <div class="card">
       <!-- Render individual wohnung details here -->
       <h2><%= @wohnung.name %></h2>
       <% if @wohnung.image.attached? %>
-  <%= image_tag @wohnung.image, class: "img-fluid mb-3", alt: @wohnung.name %>
-<% end %>
+        <%= image_tag @wohnung.image, class: "img-fluid mb-3", alt: @wohnung.name %>
+      <% end %>
       <p><%= @wohnung.description %></p>
 
       <!-- Additional property details -->
       <div class="categories">
-      <p><strong>Price:</strong> <%= number_to_currency(@wohnung.price) %></p>
-      <p><strong>Size:</strong> <%= @wohnung.size %> m²</p>
-      <p><strong>Location:</strong> <%= @wohnung.location %></p>
-      <p><strong>Year Built:</strong> <%= @wohnung.year_built %></p>
-      <p><strong>Rooms:</strong> <%= @wohnung.rooms %> </p> <!-- New Rooms Field -->
+        <p><strong>Price:</strong> <%= number_to_currency(@wohnung.price) %></p>
+        <p><strong>Size:</strong> <%= @wohnung.size %> m²</p>
+        <p><strong>Location:</strong> <%= @wohnung.location %></p>
+        <p><strong>Year Built:</strong> <%= @wohnung.year_built %></p>
+        <p><strong>Rooms:</strong> <%= @wohnung.rooms %></p>
       </div>
 
       <!-- Check if user exists before trying to display their email -->
       <p class="created-by">Created by: <%= @wohnung.user.try(:email) || "Unknown" %></p>
 
-     <div class="actions mt-4 d-flex flex-column flex-sm-row align-items-center gap-2">
-  <%= link_to "← Back to properties", wohnungs_path, class: "btn btn-secondary btn-sm" %>
+      <div class="actions mt-4 d-flex flex-column flex-sm-row align-items-center gap-2">
+        <%= link_to "← Back to properties", wohnungs_path, class: "btn btn-secondary btn-sm" %>
 
-  <% if user_signed_in? && @wohnung.user == current_user %>
-    <%= link_to "✏️ Edit this property", edit_wohnung_path(@wohnung), class: "btn btn-secondary btn-sm" %>
+        <% if user_signed_in? && @wohnung.user == current_user %>
+          <%= link_to "✏️ Edit this property", edit_wohnung_path(@wohnung), class: "btn btn-secondary btn-sm" %>
 
-    <%= button_to "🗑️ Delete this property", @wohnung, method: :delete,
-          data: { confirm: 'Are you sure you want to permanently delete this property?' },
-          class: "btn btn-secondary btn-sm" %>
-  <% end %>
-</div>
+          <%= button_to "🗑️ Delete this property", @wohnung,
+                        method: :delete,
+                        data: { turbo_confirm: 'Are you sure you want to permanently delete this property?', turbo_visit_control: "reload" },
+                        class: "btn btn-secondary btn-sm" %>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

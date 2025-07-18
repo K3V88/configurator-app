@@ -1,4 +1,5 @@
 class WohnungsController < ApplicationController
+  include ActionView::RecordIdentifier
   before_action :set_wohnung, only: %i[show edit update destroy]
   before_action :authenticate_user! # Ensure user is signed in for actions
 
@@ -64,7 +65,7 @@ class WohnungsController < ApplicationController
       return
     end
 
-    @wohnung.destroy!
+    @wohnung.destroy
 
     respond_to do |format|
       format.html { redirect_to wohnungs_path, status: :see_other, notice: "Wohnung was successfully destroyed." }
@@ -73,9 +74,13 @@ class WohnungsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_wohnung
-      @wohnung = Wohnung.find(params[:id])
+      @wohnung = Wohnung.find_by(id: params[:id])
+      if @wohnung.nil?
+        redirect_to wohnungs_path, alert: "Wohnung not found."
+      end
     end
 
     # Only allow a list of trusted parameters through.
