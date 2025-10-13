@@ -26,7 +26,7 @@
 
   <tbody id="wohnungen-list">
   <% @wohnungs.each do |wohnung| %>
-    <tr class="wohnung" data-price="<%= wohnung.price %>">
+    <tr class="wohnung" data-price="<%= wohnung.price.to_f %>">
       <td><%= wohnung.id %></td>
       <td><%= wohnung.name %></td>
       <td><%= wohnung.rooms %></td>
@@ -42,36 +42,37 @@
   </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+function setupSlider() {
   const priceSlider = document.getElementById('price-range');
   const priceDisplay = document.getElementById('price-display');
   const wohnungenList = document.getElementById('wohnungen-list');
+
+  if (!priceSlider || !wohnungenList) return;
+
   const wohnungRows = wohnungenList.getElementsByClassName('wohnung');
 
-  // Set the initial price display
+  // Set initial display
   priceDisplay.textContent = `0 - ${priceSlider.value}`;
 
-  // Listen to changes in the slider
-  priceSlider.addEventListener('input', function () {
-    const maxPrice = parseFloat(priceSlider.value);  // Get the value of the slider as a number
-    priceDisplay.textContent = `0 - ${maxPrice}`;
+  // Remove any existing listeners to avoid duplicates
+  const newSlider = priceSlider.cloneNode(true);
+  priceSlider.parentNode.replaceChild(newSlider, priceSlider);
 
-    // Loop through the rows and hide/show based on the price
+  newSlider.addEventListener('input', function () {
+    const maxPrice = parseFloat(newSlider.value);
+    priceDisplay.textContent = `0 - ${maxPrice.toLocaleString()}`;
+
     Array.from(wohnungRows).forEach(function (row) {
-      // Get the price from the data-price attribute and convert it to a float
       const rowPrice = parseFloat(row.getAttribute('data-price'));
-
-      console.log("Row price: ", rowPrice); // Log the price for debugging
-
-      // Compare row price with maxPrice
       if (rowPrice <= maxPrice) {
-        console.log('Showing row:', row);  // Log the rows that will be shown
-        row.style.display = '';  // Show the row
+        row.style.display = '';
       } else {
-        console.log('Hiding row:', row);  // Log the rows that will be hidden
-        row.style.display = 'none';  // Hide the row
+        row.style.display = 'none';
       }
     });
   });
-});
+}
+
+document.addEventListener('DOMContentLoaded', setupSlider);
+document.addEventListener('turbo:load', setupSlider);
 </script>
