@@ -1,0 +1,54 @@
+<div class="container mt-5 text-black" style="max-width: 600px;">
+  <h1 class="mb-3">Apartment Inquiry</h1>
+  <p class="mb-4 text-muted">
+    Interested in one of our apartments or have a question? Request an appointment or contact us below.
+  </p>
+
+  <%= form_with url: "/contact", method: :post, local: true do %>
+
+    <div class="mb-3">
+      <%= label_tag :name, "Full Name", class: "form-label" %>
+      <%= text_field_tag :name, nil, class: "form-control", required: true, placeholder: "" %>
+    </div>
+
+    <div class="mb-3">
+      <%= label_tag :email, "Email", class: "form-label" %>
+      <%= email_field_tag :email, nil, class: "form-control", required: true, placeholder: "example@email.com" %>
+    </div>
+
+    <div class="mb-3">
+      <%= label_tag :phone, "Phone", class: "form-label" %>
+      <%= telephone_field_tag :phone, nil, class: "form-control", placeholder: "" %>
+    </div>
+
+    <div class="mb-3">
+      <%= label_tag :request_type, "Reason for contacting us", class: "form-label" %>
+      <%= select_tag :request_type,
+          options_for_select([
+            ["I would like an appointment", "appointment"],
+            ["I have a question", "question"]
+          ]),
+          class: "form-select" %>
+    </div>
+
+    <div class="mb-3">
+      <%= label_tag :contact_method, "Preferred contact method", class: "form-label" %>
+      <%= select_tag :contact_method,
+          options_for_select([
+            ["Email", "email"],
+            ["Phone", "phone"]
+          ]),
+          class: "form-select" %>
+    </div>
+
+    <div class="mb-3">
+      <%= label_tag :message, "Message", class: "form-label" %>
+      <%= text_area_tag :message, nil, class: "form-control", rows: 5, placeholder: "Write your message here..." %>
+    </div>
+
+    <div class="mb-3">
+      <%= submit_tag "Send Request", class: "btn btn-outline-dark w-100" %>
+    </div>
+
+  <% end %>
+</div>

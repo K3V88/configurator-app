@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   # Health check route
   get "up" => "rails/health#show", as: :rails_health_check
   get '/database', to: 'pages#database'
+  get "/contact", to: "pages#contact", as: :contact
+  post "/contact", to: "contacts#create"
   # Root route
   root "wohnungs#index"
 end

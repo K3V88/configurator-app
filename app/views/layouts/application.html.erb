@@ -34,9 +34,10 @@
       <i class="bi bi-list"></i>
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <li><%= link_to "Contact", contact_path, class: "dropdown-item" %></li>
       <li><%= link_to "Home", root_path, class: "dropdown-item" %></li>
       <%= link_to "Database", database_path, class: "dropdown-item" %>
-      <li><%= link_to "About Us", "#", class: "dropdown-item" %></li>
+      
       <% if user_signed_in? %>
         <li><%= link_to "Log Out", destroy_user_session_path, method: :delete, class: "dropdown-item text-danger" %></li>
         <% else %>

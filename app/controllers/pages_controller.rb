@@ -6,4 +6,7 @@ class PagesController < ApplicationController
 
     @wohnungs = Wohnung.order("#{sort_column} #{sort_direction}")
   end
+
+  def contact
+  end
 end
