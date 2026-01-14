@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-black px-3 w-100">
+  <div class="container-fluid">
+
+    <!-- Left side -->
+    <div class="d-flex gap-3 align-items-center">
+
+      <%= link_to "Home", root_path, class: "nav-link text-white" %>
+      <%= link_to "Contact", contact_path, class: "nav-link text-white" %>
+      <%= link_to "Database", database_path, class: "nav-link text-white" %>
+
+    </div>
+
+    <!-- Center (optional logo later) -->
+    <div class="mx-auto">
+      <!-- logo or title can go here -->
+    </div>
+
+    <!-- Right side -->
+    <div class="d-flex gap-3 align-items-center">
+
+      <% if user_signed_in? %>
+        <span class="text-white small">
+          <%= current_user.email %>
+        </span>
+
+        <%= button_to "Log Out",
+              destroy_user_session_path,
+              method: :delete,
+              form_class: "d-inline",
+              class: "btn btn-outline-danger btn-sm" %>
+      <% else %>
+        <%= link_to "Login",
+              new_user_session_path,
+              class: "btn btn-outline-light btn-sm" %>
+      <% end %>
+
+    </div>
+
+  </div>
+</nav>

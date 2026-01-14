@@ -1,34 +1,25 @@
-<%= notice %>
+<div class="card-container text-white">
 
-<!-- Displaying wohnungs in a horizontally scrollable row -->
-<div class="big-container">
-  <div class="card-container">
+  <!-- Page Title -->
+  <h1 class="showcase-title">Property Showcase</h1>
 
-    <!-- Page Title -->
-    <h1 style="color: white; font-family: 'Lora', serif;">Property Showcase</h1>
+  <!-- Professional description -->
+  <p class="showcase-description" style="max-width: 600px;">
+    Configure your new, personalized home in just a few steps: Start by selecting your condominium.
+    Then, depending on the unit, you can customize the layout, choose an interior style, and select optional upgrades.
+    Finally, you'll receive a comprehensive overview of your dream property.
+  </p>
 
-    <!-- Professional description -->
-    <p style="color: white; font-family: 'Avenir', sans-serif; font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.6;">
-      Configure your new, personalized home in just a few steps: Start by selecting your condominium.
-      Then, depending on the unit, you can customize the layout, choose an interior style, and select optional upgrades.
-      Finally, you'll receive a comprehensive overview of your dream property.
-    </p>
+  <!-- Horizontally scrollable cards -->
+  <% @wohnungs.each do |wohnung| %>
+      <%= link_to wohnung_path(wohnung), class: "wohnung-card-link" do %>
+        <!-- Render card partial with image + text -->
+        <%= render wohnung %>
+      <% end %>
+  <% end %>
 
-    <% @wohnungs.each do |wohnung| %>
-      <div class="card">
-        <!-- Make the entire card clickable and link to the show page of the wohnung -->
-       <%= link_to wohnung_path(wohnung), class: "wohnung-card-link" do %>
-          <!-- Render individual wohnung details -->
-          <%= render wohnung %>
-
-          <!-- Check if user exists before trying to display their email -->
-
-        <% end %>
-
-
-      </div>
-    <% end %>
-
-    <%= link_to 'Create New Wohnung', new_wohnung_path, class: 'btn btn-primary mb-3' %>
-  </div>
+  <!-- Create New Wohnung Button -->
+<div style="text-align: center; margin-bottom: 2rem;">
+  <%= link_to 'Create New Wohnung', new_wohnung_path, class: 'whiteblack-btn' %>
+</div>
 </div>

@@ -1,6 +1,6 @@
-<div class="container mt-5 text-black" style="max-width: 600px;">
+<div class="container mt-5 text-white" style="max-width: 600px;">
   <h1 class="mb-3">Apartment Inquiry</h1>
-  <p class="mb-4 text-muted">
+  <p class="mb-4 text-white">
     Interested in one of our apartments or have a question? Request an appointment or contact us below.
   </p>
 
@@ -46,9 +46,9 @@
       <%= text_area_tag :message, nil, class: "form-control", rows: 5, placeholder: "Write your message here..." %>
     </div>
 
-    <div class="mb-3">
-      <%= submit_tag "Send Request", class: "btn btn-outline-dark w-100" %>
-    </div>
+<div class="mb-3 text-center">
+  <%= submit_tag "Send Request", class: "btn btn-outline-light px-4 py-1 text-white", style: "opacity: 0.6; border-color: rgba(255,255,255,0.4);" %>
+</div>
 
   <% end %>
 </div>

@@ -1,58 +1,61 @@
 <h1 class="display-4 text-center mt-5">Database Overview</h1>
 
 <div class="container mt-4">
-  <p class="lead text-muted text-center">
-    Here you can find an overview of all available property listings in the system.
+  <p class="lead text-white text-center">
+    Here you can find an overview of all available apartments in our system.
   </p>
 
-  <h1 class="text-center mb-4">All Properties</h1>
+  <h1 class="text-center mb-4">All Apartments</h1>
 
-  <div class="price-slider">
-  <label for="price-range">Price Range: </label>
-  <input type="range" id="price-range" min="0" max="4000000" step="1000" value="1000000">
-  <span id="price-display">0 - 5000000</span>
-</div>
+  <div class="price-slider mb-3 text-center">
+    <label for="price-range">Price Range: </label>
+    <input type="range" id="price-range" min="0" max="4000000" step="1000" value="1000000">
+    <span id="price-display">0 - 4,000,000</span>
+  </div>
 
-<table class="table table-striped table-bordered">
-  <thead>
-  <tr>
-    <th><%= sortable_column("ID", "id") %></th>
-    <th><%= sortable_column("Name", "name") %></th>
-    <th><%= sortable_column("Rooms", "rooms") %></th>
-    <th><%= sortable_column("Size", "size") %></th>
-    <th><%= sortable_column("Price", "price") %></th>
-  </tr>
-</thead>
+  <table class="table table-striped table-bordered table-dark text-white">
+    <thead>
+      <tr>
+        <th><%= sortable_column("ID", "id") %></th>
+        <th><%= sortable_column("Property", "wohnung_id") %></th>
+        <th><%= sortable_column("Floor", "floor") %></th>
+        <th><%= sortable_column("Rooms", "rooms") %></th>
+        <th><%= sortable_column("Size", "size") %></th>
+        <th><%= sortable_column("Base Price (CHF)", "price") %></th>
+      </tr>
+    </thead>
 
-  <tbody id="wohnungen-list">
-  <% @wohnungs.each do |wohnung| %>
-    <tr class="wohnung" data-price="<%= wohnung.price.to_f %>">
-      <td><%= wohnung.id %></td>
-      <td><%= wohnung.name %></td>
-      <td><%= wohnung.rooms %></td>
-      <td><%= wohnung.size %> m²</td>
-      <td><%= number_to_currency(wohnung.price) %></td>
+<tbody id="apartments-list">
+  <% @apartments.each do |apartment| %>
+    <tr class="apartment" data-price="<%= apartment.price.to_f %>" 
+        style="cursor:pointer;"
+        onclick="window.location='<%= wohnung_apartment_path(apartment.wohnung, apartment) %>'">
+      <td><%= apartment.id %></td>
+      <td><%= apartment.wohnung.name %></td>
+      <td><%= apartment.floor %></td>
+      <td><%= apartment.rooms %></td>
+      <td><%= apartment.size %> m²</td>
+      <td><%= number_to_currency(apartment.price.to_i, unit: "CHF ", separator: ",", delimiter: ".", precision: 0) %></td>
     </tr>
   <% end %>
 </tbody>
-</table>
 
-  <div class="text-center mt-4">
-    <%= link_to "View All Properties", wohnungs_path, class: "btn btn-outline-dark mb-4" %>
-  </div>
+  </table>
+
 </div>
+
 <script>
 function setupSlider() {
   const priceSlider = document.getElementById('price-range');
   const priceDisplay = document.getElementById('price-display');
-  const wohnungenList = document.getElementById('wohnungen-list');
+  const apartmentsList = document.getElementById('apartments-list');
 
-  if (!priceSlider || !wohnungenList) return;
+  if (!priceSlider || !apartmentsList) return;
 
-  const wohnungRows = wohnungenList.getElementsByClassName('wohnung');
+  const apartmentRows = apartmentsList.getElementsByClassName('apartment');
 
   // Set initial display
-  priceDisplay.textContent = `0 - ${priceSlider.value}`;
+  priceDisplay.textContent = `0 - ${parseInt(priceSlider.value).toLocaleString()}`;
 
   // Remove any existing listeners to avoid duplicates
   const newSlider = priceSlider.cloneNode(true);
@@ -62,13 +65,9 @@ function setupSlider() {
     const maxPrice = parseFloat(newSlider.value);
     priceDisplay.textContent = `0 - ${maxPrice.toLocaleString()}`;
 
-    Array.from(wohnungRows).forEach(function (row) {
+    Array.from(apartmentRows).forEach(function (row) {
       const rowPrice = parseFloat(row.getAttribute('data-price'));
-      if (rowPrice <= maxPrice) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
-      }
+      row.style.display = (rowPrice <= maxPrice) ? '' : 'none';
     });
   });
 }

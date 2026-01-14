@@ -1,17 +1,37 @@
-<div class="details-container">
-  <div class="wohnung-image">
-    <% if wohnung.image.attached? %>
-      <%= image_tag wohnung.image, class: "img-fluid" %>
-    <% end %>
+<div class="property-page">
+
+  <!-- Title -->
+  <h1 class="property-title">
+    <%= wohnung.name %>
+  </h1>
+
+  <!-- Full width image -->
+<% if wohnung.image.attached? %>
+  <div style="text-align: center; margin: 2rem 0;">
+    <%= image_tag wohnung.image, 
+        style: "display: block; margin: 0 auto; max-width: 600px; width: 100%; height: auto;" %>
   </div>
-
-  <div class="wohnung-details">
-    <div class="wohnung-name"><h1><%= wohnung.name %></h1></div>
-    <p><%= wohnung.description %></p>
+<% end %>
 
 
+
+  <!-- Description -->
+  <% if wohnung.description.present? %>
+    <div class="property-description">
+      <p>
+        <%= wohnung.description %>
+      </p>
+    </div>
+  <% end %>
+
+  <!-- Footer -->
+  <div class="property-footer">
+    <div class="created-by">
+      created by <%= wohnung.user&.email || "atelier noir" %>
+    </div>
+
+    <div class="location">
+      <%= wohnung.location %>
+    </div>
   </div>
-
 </div>
-
-<div class="wohnung-location"><p class="created-by">Created by: <%= wohnung.user.try(:email) || "Unknown" %></p>📍 Location: <%= wohnung.location %></div>

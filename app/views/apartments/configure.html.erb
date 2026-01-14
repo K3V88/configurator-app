@@ -1,0 +1,29 @@
+<div class="text-center text-white" style="padding:2rem;">
+
+  <h1>Configure Apartment - Floor <%= @apartment.floor %></h1>
+
+  <% if @apartment.image.attached? %>
+    <%= image_tag @apartment.image, style: "display:block; margin:1rem auto; max-width:400px; width:100%; height:auto;" %>
+  <% end %>
+
+  <p class="mb-1"><%= @apartment.size %> m², <%= @apartment.rooms %> rooms</p>
+  <p class="mb-3">Price: €<%= @apartment.price %></p>
+
+  <% if @apartment.description.present? %>
+    <p class="mb-3"><strong>Description:</strong> <%= @apartment.description %></p>
+  <% end %>
+
+  <!-- Configuration Info aligned with the image -->
+  <div style="max-width:400px; margin: 0 auto; text-align: left;">
+    <p class="mb-2">
+      Welcome to the apartment configurator! Here you can customize your selected apartment to match your preferences.
+    </p>
+    <p class="mb-4">
+      Choose layout options, interior styles, and additional features. Once complete, you'll get a summary of your personalized apartment.
+    </p>
+  </div>
+
+  <!-- Start Configuring Button -->
+  <%= link_to "Start Configuring", configure_wohnung_apartment_path(@wohnung, @apartment), class: "btn btn-outline-light btn-lg mt-3" %>
+
+</div>

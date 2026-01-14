@@ -1,40 +1,61 @@
-<%= notice %>
+<div class="property-page text-center bg-black text-white py-5">
 
-<!-- Displaying the wohnung details in a large centered container -->
-<div class="big-container" id="wohnung_<%= @wohnung.id %>">
-  <div class="card-container">
-    <div class="card">
-      <!-- Render individual wohnung details here -->
-      <h2><%= @wohnung.name %></h2>
-      <% if @wohnung.image.attached? %>
-        <%= image_tag @wohnung.image, class: "img-fluid mb-3", alt: @wohnung.name %>
-      <% end %>
-      <p><%= @wohnung.description %></p>
+  <!-- Wohnung Title -->
+  <h1 class="property-title mb-4"><%= @wohnung.name %></h1>
 
-      <!-- Additional property details -->
-      <div class="categories">
-        <p><strong>Price:</strong> <%= number_to_currency(@wohnung.price) %></p>
-        <p><strong>Size:</strong> <%= @wohnung.size %> m²</p>
-        <p><strong>Location:</strong> <%= @wohnung.location %></p>
-        <p><strong>Year Built:</strong> <%= @wohnung.year_built %></p>
-        <p><strong>Rooms:</strong> <%= @wohnung.rooms %></p>
-      </div>
-
-      <!-- Check if user exists before trying to display their email -->
-      <p class="created-by">Created by: <%= @wohnung.user.try(:email) || "Unknown" %></p>
-
-      <div class="actions mt-4 d-flex flex-column flex-sm-row align-items-center gap-2">
-        <%= link_to "← Back to properties", wohnungs_path, class: "btn btn-secondary btn-sm" %>
-
-        <% if user_signed_in? && @wohnung.user == current_user %>
-          <%= link_to "✏️ Edit this property", edit_wohnung_path(@wohnung), class: "btn btn-secondary btn-sm" %>
-
-          <%= button_to "🗑️ Delete this property", @wohnung,
-                        method: :delete,
-                        data: { turbo_confirm: 'Are you sure you want to permanently delete this property?', turbo_visit_control: "reload" },
-                        class: "btn btn-secondary btn-sm" %>
-        <% end %>
-      </div>
+  <!-- Wohnung Image -->
+  <% if @wohnung.image.attached? %>
+    <div class="my-4 d-flex justify-content-center">
+      <%= image_tag @wohnung.image, class: "img-fluid", style: "max-width:600px; width:100%; height:auto; border-radius:5px;" %>
     </div>
+  <% end %>
+
+  <!-- Wohnung Description -->
+  <p class="property-description mx-auto mb-4" style="max-width:600px;">
+    <%= @wohnung.description %>
+  </p>
+
+  <!-- Wohnung Action Buttons -->
+  <div class="mb-4 d-flex justify-content-center gap-2">
+    <%= link_to "Edit Wohnung", edit_wohnung_path(@wohnung), class: "btn btn-outline-light btn-sm" %>
+
+    <%= button_to "🗑️ Delete Wohnung", @wohnung,
+          method: :delete,
+          data: { turbo_confirm: "Are you sure you want to delete this property?" },
+          class: "btn btn-outline-danger btn-sm" %>
+
+    <%= link_to "Create Apartment", new_wohnung_apartment_path(@wohnung), class: "btn btn-outline-light btn-sm" %>
+  </div>
+
+  <!-- Apartments List -->
+  <h2 class="mb-4">Select an Apartment</h2>
+
+  <div class="apartments-list d-flex flex-wrap justify-content-center gap-4 mt-3">
+    <% @wohnung.apartments.each do |apartment| %>
+      <div class="apartment-card bg-dark text-white p-3 rounded shadow-sm" style="width:220px; display:flex; flex-direction:column; align-items:center;">
+
+        <% if apartment.image.attached? %>
+          <%= image_tag apartment.image, class: "img-fluid rounded mb-3", style: "height:120px; object-fit:cover; width:100%;" %>
+        <% end %>
+
+        <div class="apartment-info text-start w-100 mb-3">
+          <p class="mb-1"><strong>Floor:</strong> <%= apartment.floor %></p>
+          <p class="mb-1"><strong>Size:</strong> <%= apartment.size %> m²</p>
+          <p class="mb-1"><strong>Rooms:</strong> <%= apartment.rooms %></p>
+          <p class="mb-1"><strong>Base Price:</strong> CHF <%= apartment.price %></p>
+        </div>
+
+        <!-- Apartment Action Buttons -->
+        <div class="d-flex flex-column w-100 gap-2">
+          <%= link_to "Configure", configure_wohnung_apartment_path(@wohnung, apartment), class: "btn btn-outline-light btn-sm w-100" %>
+          <%= link_to "Edit", edit_wohnung_apartment_path(@wohnung, apartment), class: "btn btn-outline-light btn-sm w-100" %>
+          <%= button_to "🗑️ Delete", wohnung_apartment_path(@wohnung, apartment),
+                method: :delete,
+                data: { turbo_confirm: "Are you sure you want to delete this apartment?" },
+                class: "btn btn-outline-danger btn-sm w-100" %>
+        </div>
+
+      </div>
+    <% end %>
   </div>
 </div>

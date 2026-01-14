@@ -13,7 +13,13 @@ Rails.application.routes.draw do
   end
 
   # Define your resources for wohnungs
-  resources :wohnungs
+  resources :wohnungs do
+    resources :apartments, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+      member do
+        get 'configure'
+      end
+    end
+  end
 
   # Health check route
   get "up" => "rails/health#show", as: :rails_health_check

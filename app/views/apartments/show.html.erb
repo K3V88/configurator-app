@@ -1,0 +1,18 @@
+<div class="text-center text-white" style="padding:2rem;">
+  <h1>Apartment - Floor <%= @apartment.floor %></h1>
+
+  <% if @apartment.image.attached? %>
+    <%= image_tag @apartment.image, style: "display:block; margin:1rem auto; max-width:400px; width:100%; height:auto;" %>
+  <% end %>
+
+  <p><%= @apartment.size %> m², <%= @apartment.rooms %> rooms</p>
+  <p>Base Price: <%= number_to_currency(@apartment.price.to_i, unit: "CHF ", separator: ",", delimiter: ".", precision: 0) %></p>
+
+  <% if @apartment.description.present? %>
+    <p><strong>Description:</strong> <%= @apartment.description %></p>
+  <% end %>
+
+  <div class="mt-3">
+    <%= link_to "Back to Property", wohnung_path(@apartment.wohnung), class: "btn btn-outline-light" %>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<footer class="site-footer bg-black text-white mt-auto">
+  <div class="container py-3 text-center small">
+
+    <% if user_signed_in? %>
+      You are signed in as <strong><%= current_user.email %></strong>
+    <% else %>
+      &copy; <%= Time.current.year %> Configurator
+    <% end %>
+
+  </div>
+</footer>

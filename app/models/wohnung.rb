@@ -1,6 +1,7 @@
 class Wohnung < ApplicationRecord
   belongs_to :user
   has_one_attached :image
+  has_many :apartments, dependent: :destroy
 
   validates :name, presence: true
   validates :description, presence: true

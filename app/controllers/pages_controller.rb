@@ -5,6 +5,9 @@ class PagesController < ApplicationController
     sort_direction = params[:direction] == "desc" ? "desc" : "asc"
 
     @wohnungs = Wohnung.order("#{sort_column} #{sort_direction}")
+    @apartments = Apartment.order("#{sort_column} #{sort_direction}")
+
+    @apartments = Apartment.includes(:wohnung).all
   end
 
   def contact

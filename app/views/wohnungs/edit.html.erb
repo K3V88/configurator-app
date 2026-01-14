@@ -1,10 +1,12 @@
+<div class="mastercontainer bg-black text-white pt-5">
 <h1 style="text-align: center; margin-top: 50px;">Edit property</h1>
 
 <%= render "form", wohnung: @wohnung %>
 
 <br>
 
-<div style="text-align: center; margin-top: 20px;">
-  <%= link_to "Show this property", @wohnung %> |
-  <%= link_to "Back to properties", wohnungs_path %>
+<div class="d-flex justify-content-center mt-4 mb-4 gap-3">
+  <%= link_to "Show this property", @wohnung, class: "text-white" %>
+  <%= link_to "Back to properties", wohnungs_path, class: "text-white" %>
+</div>
 </div>
