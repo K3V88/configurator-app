@@ -1,0 +1,2 @@
+module ApartmentConfigurationsHelper
+end

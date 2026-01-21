@@ -16,32 +16,31 @@
   <table class="table table-striped table-bordered table-dark text-white">
     <thead>
       <tr>
-        <th><%= sortable_column("ID", "id") %></th>
-        <th><%= sortable_column("Property", "wohnung_id") %></th>
-        <th><%= sortable_column("Floor", "floor") %></th>
-        <th><%= sortable_column("Rooms", "rooms") %></th>
-        <th><%= sortable_column("Size", "size") %></th>
-        <th><%= sortable_column("Base Price (CHF)", "price") %></th>
+        <!-- Use plain text headers for client-side sorting -->
+        <th data-column="id">ID</th>
+        <th data-column="property">Property</th>
+        <th data-column="floor">Floor</th>
+        <th data-column="rooms">Rooms</th>
+        <th data-column="size">Size</th>
+        <th data-column="price">Base Price (CHF)</th>
       </tr>
     </thead>
 
-<tbody id="apartments-list">
-  <% @apartments.each do |apartment| %>
-    <tr class="apartment" data-price="<%= apartment.price.to_f %>" 
-        style="cursor:pointer;"
-        onclick="window.location='<%= wohnung_apartment_path(apartment.wohnung, apartment) %>'">
-      <td><%= apartment.id %></td>
-      <td><%= apartment.wohnung.name %></td>
-      <td><%= apartment.floor %></td>
-      <td><%= apartment.rooms %></td>
-      <td><%= apartment.size %> m²</td>
-      <td><%= number_to_currency(apartment.price.to_i, unit: "CHF ", separator: ",", delimiter: ".", precision: 0) %></td>
-    </tr>
-  <% end %>
-</tbody>
-
+    <tbody id="apartments-list">
+      <% @apartments.each do |apartment| %>
+        <tr class="apartment" data-price="<%= apartment.price.to_f %>" 
+            style="cursor:pointer;"
+            onclick="window.location='<%= wohnung_apartment_path(apartment.wohnung, apartment) %>'">
+          <td><%= apartment.id %></td>
+          <td><%= apartment.wohnung.name %></td>
+          <td><%= apartment.floor %></td>
+          <td><%= apartment.rooms %></td>
+          <td><%= apartment.size %> m²</td>
+          <td><%= number_to_currency(apartment.price.to_i, unit: "CHF ", separator: ",", delimiter: ".", precision: 0) %></td>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
-
 </div>
 
 <script>
@@ -72,6 +71,55 @@ function setupSlider() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', setupSlider);
-document.addEventListener('turbo:load', setupSlider);
+// Helper to parse numbers, stripping currency formatting
+function parseNumber(str) {
+  return parseFloat(str.replace(/[^\d]/g, '')) || 0;
+}
+
+// Client-side table sorting
+function setupSorting() {
+  const table = document.querySelector('table');
+  if (!table) return;
+  const headers = table.querySelectorAll('th');
+  const tbody = table.querySelector('tbody');
+
+  // Columns with numeric values (ID, Floor, Rooms, Size, Price)
+  const numericColumns = [0, 2, 3, 4, 5];
+
+  headers.forEach((th, index) => {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      const asc = !th.dataset.asc || th.dataset.asc === "false";
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.trim();
+        let bText = b.children[index].innerText.trim();
+
+        if (numericColumns.includes(index)) {
+          aText = parseNumber(aText);
+          bText = parseNumber(bText);
+        } else {
+          aText = aText.toLowerCase();
+          bText = bText.toLowerCase();
+        }
+
+        return asc ? (aText > bText ? 1 : -1) : (aText < bText ? 1 : -1);
+      });
+
+      rows.forEach(row => tbody.appendChild(row));
+      th.dataset.asc = asc;
+    });
+  });
+}
+
+// Initialize slider and sorting on page load and Turbo navigation
+document.addEventListener('DOMContentLoaded', () => {
+  setupSlider();
+  setupSorting();
+});
+document.addEventListener('turbo:load', () => {
+  setupSlider();
+  setupSorting();
+});
 </script>

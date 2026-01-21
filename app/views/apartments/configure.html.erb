@@ -1,29 +1,190 @@
-<div class="text-center text-white" style="padding:2rem;">
+<div class="text-center text-white"
+     style="padding:2rem;"
+     data-update-url="<%= wohnung_apartment_configuration_path(@wohnung, @apartment) %>"
+     data-apartment-id="<%= @apartment.id %>"
+     data-wohnung-id="<%= @wohnung.id %>"
+     data-base-price="<%= @apartment.price %>">
 
-  <h1>Configure Apartment - Floor <%= @apartment.floor %></h1>
+  <h1>Configure Apartment – Floor <%= @apartment.floor %></h1>
 
   <% if @apartment.image.attached? %>
-    <%= image_tag @apartment.image, style: "display:block; margin:1rem auto; max-width:400px; width:100%; height:auto;" %>
+    <%= image_tag @apartment.image,
+      style: "display:block; margin:1rem auto; max-width:400px; width:100%; height:auto;" %>
   <% end %>
 
-  <p class="mb-1"><%= @apartment.size %> m², <%= @apartment.rooms %> rooms</p>
-  <p class="mb-3">Price: €<%= @apartment.price %></p>
+  <p class="mb-1"><%= @apartment.size %> m² · <%= @apartment.rooms %> rooms</p>
+  <p class="mb-3">Base Price: €<%= @apartment.price %></p>
 
   <% if @apartment.description.present? %>
     <p class="mb-3"><strong>Description:</strong> <%= @apartment.description %></p>
   <% end %>
 
-  <!-- Configuration Info aligned with the image -->
-  <div style="max-width:400px; margin: 0 auto; text-align: left;">
-    <p class="mb-2">
-      Welcome to the apartment configurator! Here you can customize your selected apartment to match your preferences.
-    </p>
-    <p class="mb-4">
-      Choose layout options, interior styles, and additional features. Once complete, you'll get a summary of your personalized apartment.
+  <!-- STEP 1: Welcome -->
+  <div class="step" id="step-1" style="max-width:400px; margin:0 auto;">
+    <p class="mb-2">Welcome to the apartment configurator! Here you can customize your selected apartment to match your preferences.</p>
+    <p class="mb-4">Choose styles, materials, and technical options. Your selections are saved automatically.</p>
+    <button class="btn btn-outline-light btn-lg mt-3 next-step" data-next="2">Start Configuring</button>
+  </div>
+
+  <!-- STEP 2: Explanation -->
+  <div class="step" id="step-2" style="display:none; max-width:500px; margin:2rem auto; text-align:left;">
+    <p>The configurator works step by step. First, you choose a design style. Each style defines materials, technical level, and brand quality.</p>
+    <p>In the next steps, you will fine-tune wall colors, floors, lighting, and optional upgrades.</p>
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-outline-light prev-step" data-prev="1">← Back</button>
+      <button class="btn btn-outline-light next-step" data-next="3">Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Choose Style -->
+  <div class="step" id="step-3" style="display:none; max-width:700px; margin:2rem auto; text-align:left;">
+    <h3 class="mb-4 text-center">Choose Your Style</h3>
+    <div class="style-grid">
+      <% styles = [
+        {name: "functional", title: "Functional", materials: "Laminated flooring, ceramic tiles", walls: "White matte paint", lighting: "Basic LED fixtures", technology: "Standard switches & sockets", brands: "Eglo, Busch-Jaeger"},
+        {name: "zeitlos", title: "Zeitlos", materials: "Oak parquet, porcelain stoneware", walls: "Premium washable paint", lighting: "Dimmable LED spots", technology: "Design switches", brands: "Philips Hue, Jung"},
+        {name: "hochwertig", title: "Hochwertig", materials: "Solid wood parquet, natural stone", walls: "Mineral or textured finishes", lighting: "Architectural lighting system", technology: "Smart home integration", brands: "Gira, Occhio, KNX"}
+      ] %>
+
+      <% styles.each do |s| %>
+        <div class="style-card" data-style="<%= s[:name] %>">
+          <h4><%= s[:title] %></h4>
+          <ul>
+            <li><strong>Materials:</strong> <%= s[:materials] %></li>
+            <li><strong>Walls:</strong> <%= s[:walls] %></li>
+            <li><strong>Lighting:</strong> <%= s[:lighting] %></li>
+            <li><strong>Technology:</strong> <%= s[:technology] %></li>
+            <li><strong>Brands:</strong> <%= s[:brands] %></li>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+      <button class="btn btn-outline-light prev-step" data-prev="2">← Back</button>
+      <button class="btn btn-outline-light next-step" data-next="4">Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Design Packages -->
+  <div class="step" id="step-4" style="display:none; max-width:700px; margin:2rem auto; text-align:left;">
+    <h3 class="mb-4 text-center">Design Packages</h3>
+
+    <h4>Wall Colors</h4>
+    <div class="option-grid" id="wall-colors">
+      <% wall_colors = [{name: "Soft White", price: 0},{name: "Warm Beige", price: 50},{name: "Slate Gray", price: 70},{name: "Pastel Blue", price: 60},{name: "Olive Green", price: 80}] %>
+      <% wall_colors.each do |color| %>
+        <div class="option-card" data-category="wall_color" data-value="<%= color[:name] %>" data-price="<%= color[:price] %>">
+          <%= color[:name] %> (€<%= color[:price] %>)
+        </div>
+      <% end %>
+    </div>
+
+    <h4>Floor Textures</h4>
+    <div class="option-grid" id="floor-textures">
+      <% floor_textures = [{name: "Oak Parquet", price: 150},{name: "Dark Walnut", price: 180},{name: "Ceramic Tiles", price: 100},{name: "Concrete Look", price: 120},{name: "Bamboo", price: 130}] %>
+      <% floor_textures.each do |floor| %>
+        <div class="option-card" data-category="floor_texture" data-value="<%= floor[:name] %>" data-price="<%= floor[:price] %>">
+          <%= floor[:name] %> (€<%= floor[:price] %>)
+        </div>
+      <% end %>
+    </div>
+
+    <h4>Lighting Design</h4>
+    <div class="option-grid" id="lighting-design">
+      <% lighting_options = [{name: "Minimal LED", price: 0},{name: "Dimmable Spots", price: 50},{name: "Smart Lights", price: 120},{name: "Pendant Fixtures", price: 80},{name: "Architectural Lighting", price: 200}] %>
+      <% lighting_options.each do |light| %>
+        <div class="option-card" data-category="lighting" data-value="<%= light[:name] %>" data-price="<%= light[:price] %>">
+          <%= light[:name] %> (€<%= light[:price] %>)
+        </div>
+      <% end %>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+      <button class="btn btn-outline-light prev-step" data-prev="3">← Back</button>
+      <button class="btn btn-outline-light next-step" data-next="5">Next →</button>
+    </div>
+  </div>
+
+<!-- STEP 5: Additional Options -->
+<div class="step"
+     id="step-5"
+     style="display:none; max-width:700px; margin:2rem auto; text-align:left;">
+
+  <h3 class="mb-4 text-center">Additional Options</h3>
+
+  <div class="option-grid" id="additional-options">
+    <% additional_options = [
+      {name: "Plants Package", description: "We buy plants for an optimal indoor climate", price: 100},
+      {name: "Branded Textile", description: "Duvets, towels, blankets", price: 80},
+      {name: "Art Pieces", description: "Decorative artwork to complement your style", price: 200},
+      {name: "Custom Furniture", description: "Tailored furniture matching your style", price: 400}
+    ] %>
+
+    <% additional_options.each do |opt| %>
+      <div class="option-card"
+           data-category="additional_option"
+           data-value="<%= opt[:name] %>"
+           data-price="<%= opt[:price] %>">
+        <strong><%= opt[:name] %></strong>
+        <p style="font-size:0.9rem; margin:0.25rem 0;">
+          <%= opt[:description] %>
+        </p>
+        <span>€<%= opt[:price] %></span>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="d-flex justify-content-between mt-4">
+    <button class="btn btn-outline-light prev-step" data-prev="4">← Back</button>
+    <button class="btn btn-outline-light next-step" data-next="6">Finish →</button>
+  </div>
+</div>
+
+<!-- STEP 6: Summary -->
+<div class="step"
+     id="step-6"
+     style="display:none; max-width:700px; margin:2rem auto; text-align:left;">
+
+  <h3 class="mb-4 text-center">Summary</h3>
+
+  <div id="summary-container"
+       style="background: rgba(255,255,255,0.05); padding:1rem; border-radius:0.5rem;">
+    <p><strong>Base Price:</strong> €<%= @apartment.price %></p>
+
+    <ul id="summary-options">
+      <!-- populated by JS -->
+    </ul>
+
+    <p>
+      <strong>Total Price:</strong>
+      €<span id="total-price"><%= @apartment.price %></span>
     </p>
   </div>
 
-  <!-- Start Configuring Button -->
-  <%= link_to "Start Configuring", configure_wohnung_apartment_path(@wohnung, @apartment), class: "btn btn-outline-light btn-lg mt-3" %>
+  <div class="d-flex justify-content-between mt-4">
+    <button class="btn btn-outline-light prev-step" data-prev="5">← Back</button>
+<button id="finish-configurator">Finish & Download PDF</button>
 
+  </div>
 </div>
+
+
+<style>
+/* Style grids */
+.style-grid, .option-grid {
+  display: grid;
+  gap: 1rem;
+}
+.style-grid { grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); }
+.option-grid { grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); }
+.style-card, .option-card {
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.style-card:hover, .option-card:hover { background: rgba(255,255,255,0.05); }
+.style-card.selected, .option-card.selected { border-color: white; background: rgba(255,255,255,0.1); }
+</style>

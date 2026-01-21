@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Apartment Configuration Summary</title>
+  <style>
+    body { font-family: Arial, sans-serif; color: #333; padding: 2rem; }
+    h1, h2 { text-align: center; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+    .total { font-weight: bold; margin-top: 1rem; font-size: 1.2rem; }
+    .section { margin-bottom: 2rem; }
+  </style>
+</head>
+<body>
+  <h1>Apartment Configuration Summary</h1>
+  <h2>Floor <%= apartment.floor %> – <%= apartment.size %> m², <%= apartment.rooms %> rooms</h2>
+
+  <% if apartment.image.attached? %>
+    <div style="text-align:center; margin:1rem 0;">
+      <%= image_tag apartment.image, style: "max-width:400px; width:100%; height:auto;" %>
+    </div>
+  <% end %>
+
+  <% base_price = apartment.price %>
+  <% total_price = base_price %>
+
+  <div class="section">
+    <p><strong>Base Price:</strong> €<%= base_price %></p>
+
+    <ul>
+      <% if config.data["style"].present? %>
+        <li><strong>Style:</strong> <%= config.data["style"] %></li>
+      <% end %>
+
+      <% if config.data["wall_color"].present? %>
+        <% wall_price = config.data["wall_color_price"].to_i %>
+        <% total_price += wall_price %>
+        <li>Wall Color: <%= config.data["wall_color"] %> (€<%= wall_price %>)</li>
+      <% end %>
+
+      <% if config.data["floor_texture"].present? %>
+        <% floor_price = config.data["floor_texture_price"].to_i %>
+        <% total_price += floor_price %>
+        <li>Floor Texture: <%= config.data["floor_texture"] %> (€<%= floor_price %>)</li>
+      <% end %>
+
+      <% if config.data["lighting"].present? %>
+        <% light_price = config.data["lighting_price"].to_i %>
+        <% total_price += light_price %>
+        <li>Lighting: <%= config.data["lighting"] %> (€<%= light_price %>)</li>
+      <% end %>
+
+      <% if config.data["additional_options"].present? %>
+        <% config.data["additional_options"].each do |opt| %>
+          <% total_price += opt["price"].to_i %>
+          <li><%= opt["value"] %> (€<%= opt["price"] %>)</li>
+        <% end %>
+      <% end %>
+    </ul>
+
+    <p class="total">Total Price: €<%= total_price %></p>
+  </div>
+
+  <% if apartment.description.present? %>
+    <div class="section">
+      <p><strong>Description:</strong> <%= apartment.description %></p>
+    </div>
+  <% end %>
+</body>
+</html>

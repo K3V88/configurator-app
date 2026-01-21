@@ -186,6 +186,7 @@ GEM
       racc (~> 1.4)
     openssl (3.3.2)
     orm_adapter (0.5.0)
+    ostruct (0.6.3)
     pg (1.5.9)
     popper_js (2.11.8)
     pp (0.6.2)
@@ -295,6 +296,9 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    wicked_pdf (2.8.2)
+      activesupport
+      ostruct
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.3)
@@ -331,6 +335,7 @@ DEPENDENCIES
   turbo-rails
   tzinfo-data
   web-console
+  wicked_pdf
 
 RUBY VERSION
    ruby 3.3.6p108

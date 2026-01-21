@@ -1,31 +1,49 @@
 Rails.application.routes.draw do
-  get 'pages/database'
-  # Define Devise routes for user authentication
+  # -------------------------
+  # Static / Pages
+  # -------------------------
+  get "/database", to: "pages#database"
+  get "/contact", to: "pages#contact", as: :contact
+  post "/contact", to: "contacts#create"
+
+  # -------------------------
+  # Devise (Authentication)
+  # -------------------------
   devise_for :users, path: "", path_names: {
     sign_in: "login",
     sign_out: "logout",
     sign_up: "register"
   }
 
-  # Wrap logout route in devise_scope to specify the mapping for the user
   devise_scope :user do
-    delete 'logout', to: 'devise/sessions#destroy', as: :logout
+    delete "logout", to: "devise/sessions#destroy", as: :logout
   end
 
-  # Define your resources for wohnungs
-  resources :wohnungs do
-    resources :apartments, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
-      member do
-        get 'configure'
-      end
+  # -------------------------
+  # Core domain: Wohnungs & Apartments
+  # -------------------------
+resources :wohnungs do
+  resources :apartments do
+    # Configure page (GET /wohnungs/:wohnung_id/apartments/:id/configure)
+    member do
+      get :configure
+
+      # Finalize PDF download (GET /wohnungs/:wohnung_id/apartments/:id/configure/finalize)
+      get 'configure/finalize', to: 'apartment_configurations#finalize', as: :finalize_configure
     end
-  end
 
-  # Health check route
-  get "up" => "rails/health#show", as: :rails_health_check
-  get '/database', to: 'pages#database'
-  get "/contact", to: "pages#contact", as: :contact
-  post "/contact", to: "contacts#create"
-  # Root route
+    # Apartment configuration (AJAX save)
+    resource :configuration, only: [:show, :update], controller: "apartment_configurations"
+  end
+end
+
+  # -------------------------
+  # Health check
+  # -------------------------
+  get "up", to: "rails/health#show", as: :rails_health_check
+
+  # -------------------------
+  # Root
+  # -------------------------
   root "wohnungs#index"
 end
