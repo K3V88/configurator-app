@@ -9,6 +9,8 @@ document.addEventListener("turbo:load", () => {
 
   const updateUrl = configuratorContainer.dataset.updateUrl;
   const basePrice = parseInt(configuratorContainer.dataset.basePrice, 10) || 0;
+  const apartmentId = configuratorContainer.dataset.apartmentId;
+  const wohnungId = configuratorContainer.dataset.wohnungId;
 
   // -----------------
   // Frontend state
@@ -18,36 +20,31 @@ document.addEventListener("turbo:load", () => {
     wall_color: null,
     floor_texture: null,
     lighting: null,
-    additional_options: [] // [{ value, price }]
+    additional_options: []
   };
 
   // -----------------
-  // Show a step
+  // Step navigation
   // -----------------
   const showStep = (step) => {
     document.querySelectorAll(".step").forEach(s => s.style.display = "none");
-
     const el = document.getElementById(`step-${step}`);
     if (el) el.style.display = "block";
-
     currentStep = parseInt(step, 10);
 
+    // Generate summary automatically when Step 6 is shown
     if (currentStep === 6) generateSummary();
   };
 
-  // -----------------
-  // Navigation buttons
-  // -----------------
   document.querySelectorAll(".prev-step").forEach(btn => {
     btn.addEventListener("click", () => showStep(btn.dataset.prev));
   });
-
   document.querySelectorAll(".next-step").forEach(btn => {
     btn.addEventListener("click", () => showStep(btn.dataset.next));
   });
 
   // -----------------
-  // Utility: save selection to backend
+  // Save selection to backend
   // -----------------
   const saveSelection = (payload) => {
     fetch(updateUrl, {
@@ -57,7 +54,7 @@ document.addEventListener("turbo:load", () => {
         "X-CSRF-Token": document.querySelector("meta[name=csrf-token]").content
       },
       body: JSON.stringify({ configuration: payload })
-    });
+    }).catch(err => console.error("Error saving selection:", err));
   };
 
   // -----------------
@@ -74,7 +71,7 @@ document.addEventListener("turbo:load", () => {
   });
 
   // -----------------
-  // Step 4 & 5: Options
+  // Steps 4 & 5: Options (single & multi-select)
   // -----------------
   document.querySelectorAll(".option-card[data-category]").forEach(card => {
     const category = card.dataset.category;
@@ -82,20 +79,16 @@ document.addEventListener("turbo:load", () => {
     const price = parseInt(card.dataset.price, 10) || 0;
 
     if (category === "additional_option") {
-      // MULTI-SELECT
       card.addEventListener("click", () => {
         card.classList.toggle("selected");
-
         if (card.classList.contains("selected")) {
           selections.additional_options.push({ value, price });
         } else {
           selections.additional_options = selections.additional_options.filter(o => o.value !== value);
         }
-
         saveSelection({ additional_options: selections.additional_options });
       });
     } else {
-      // SINGLE-SELECT
       card.addEventListener("click", () => {
         document.querySelectorAll(`.option-card[data-category="${category}"]`).forEach(c => c.classList.remove("selected"));
         card.classList.add("selected");
@@ -112,7 +105,6 @@ document.addEventListener("turbo:load", () => {
   const generateSummary = () => {
     const list = document.getElementById("summary-options");
     const totalEl = document.getElementById("total-price");
-
     if (!list || !totalEl) return;
 
     list.innerHTML = "";
@@ -125,64 +117,54 @@ document.addEventListener("turbo:load", () => {
       total += price;
     };
 
-    if (selections.style) {
-      const li = document.createElement("li");
-      li.textContent = `Style: ${selections.style}`;
-      list.appendChild(li);
-    }
-
+    if (selections.style) addLine("Style: " + selections.style, 0);
     if (selections.wall_color) addLine(`Wall Color: ${selections.wall_color.value}`, selections.wall_color.price);
     if (selections.floor_texture) addLine(`Floor Texture: ${selections.floor_texture.value}`, selections.floor_texture.price);
     if (selections.lighting) addLine(`Lighting: ${selections.lighting.value}`, selections.lighting.price);
-
     selections.additional_options.forEach(opt => addLine(opt.value, opt.price));
 
     totalEl.textContent = total;
   };
 
   // -----------------
-  // Finish button → generate PDF
+  // Finish button → save & generate PDF
   // -----------------
-finishBtn.addEventListener("click", () => {
-  const finalPayload = {
-    style: selections.style,
-    wall_color: selections.wall_color?.value,
-    floor_texture: selections.floor_texture?.value,
-    lighting: selections.lighting?.value,
-    additional_options: selections.additional_options
-  };
+  const finishBtn = document.getElementById("finish-configurator");
+  if (finishBtn) {
+    finishBtn.addEventListener("click", () => {
+      // Make sure summary is up-to-date
+      generateSummary();
 
-  // Save configuration first
-  fetch(configuratorContainer.dataset.updateUrl, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Token": document.querySelector("meta[name=csrf-token]").content
-    },
-    body: JSON.stringify({ configuration: finalPayload })
-  })
-    .then(() => {
-      // Trigger PDF download by adding .pdf
-      const apartmentId = configuratorContainer.dataset.apartmentId;
-      const wohnungId = configuratorContainer.dataset.wohnungId;
+      const finalPayload = {
+        style: selections.style,
+        wall_color: selections.wall_color?.value,
+        floor_texture: selections.floor_texture?.value,
+        lighting: selections.lighting?.value,
+        additional_options: selections.additional_options
+      };
 
-      // Create a real link to force browser to download
-      const link = document.createElement("a");
-      link.href = `/wohnungs/${wohnungId}/apartments/${apartmentId}/configure/finalize.pdf`;
-      link.target = "_blank";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    })
-    .catch(err => {
-      console.error("Failed to save configuration:", err);
-      alert("Failed to save configuration. Please try again.");
+      fetch(updateUrl, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector("meta[name=csrf-token]").content
+        },
+        body: JSON.stringify({ configuration: finalPayload })
+      })
+      .then(() => {
+        const link = document.createElement("a");
+        link.href = `/wohnungs/${wohnungId}/apartments/${apartmentId}/configure/finalize.pdf`;
+        link.download = "apartment_configuration.pdf";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      })
+      .catch(err => {
+        console.error("Failed to save configuration:", err);
+        alert("Failed to save configuration. Please try again.");
+      });
     });
-});
-
-
-
-
+  }
 
   // -----------------
   // Init
