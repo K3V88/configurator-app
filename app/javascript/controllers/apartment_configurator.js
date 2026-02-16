@@ -9,6 +9,7 @@ document.addEventListener("turbo:load", () => {
 
   const updateUrl = configuratorContainer.dataset.updateUrl;
   const basePrice = parseInt(configuratorContainer.dataset.basePrice, 10) || 0;
+  const apartmentSize = parseInt(configuratorContainer.dataset.apartmentSize, 10) || 0;
   const apartmentId = configuratorContainer.dataset.apartmentId;
   const wohnungId = configuratorContainer.dataset.wohnungId;
 
@@ -23,6 +24,10 @@ document.addEventListener("turbo:load", () => {
     additional_options: []
   };
 
+  // Track the currently selected cards
+  let selectedWallColorCard = null;
+  let selectedFloorCard = null;
+
   // -----------------
   // Step navigation
   // -----------------
@@ -32,7 +37,6 @@ document.addEventListener("turbo:load", () => {
     if (el) el.style.display = "block";
     currentStep = parseInt(step, 10);
 
-    // Generate summary automatically when Step 6 is shown
     if (currentStep === 6) generateSummary();
   };
 
@@ -76,9 +80,47 @@ document.addEventListener("turbo:load", () => {
   document.querySelectorAll(".option-card[data-category]").forEach(card => {
     const category = card.dataset.category;
     const value = card.dataset.value;
-    const price = parseInt(card.dataset.price, 10) || 0;
 
-    if (category === "additional_option") {
+    if (category === "wall_color" || category === "floor_texture") {
+      const pricePerM2 = parseInt(card.dataset.pricePerM2, 10) || 0;
+
+      card.addEventListener("click", () => {
+        // Deselect other cards in the category
+        document.querySelectorAll(`.option-card[data-category="${category}"]`).forEach(c => {
+          c.classList.remove("selected");
+
+          if (category === "wall_color" && c !== card) {
+            c.style.backgroundColor = '';
+            c.style.color = '';
+          }
+
+          if (category === "floor_texture" && c !== card) {
+            c.style.backgroundImage = '';
+            c.style.color = '';
+          }
+        });
+
+        // Select current card
+        card.classList.add("selected");
+
+        if (category === "wall_color") {
+          card.style.backgroundColor = card.dataset.color;
+          card.style.color = '#000';
+          selectedWallColorCard = card;
+        }
+
+        if (category === "floor_texture") {
+          card.style.backgroundImage = `url('/images/floors/${value.toLowerCase().replace(/\s+/g, '_')}.png')`;
+          card.style.color = '#000';
+          selectedFloorCard = card;
+        }
+
+        selections[category] = { value, pricePerM2 };
+        saveSelection({ [category]: value, pricePerM2 });
+      });
+    } else if (category === "additional_option") {
+      const price = parseInt(card.dataset.price, 10) || 0;
+
       card.addEventListener("click", () => {
         card.classList.toggle("selected");
         if (card.classList.contains("selected")) {
@@ -89,6 +131,7 @@ document.addEventListener("turbo:load", () => {
         saveSelection({ additional_options: selections.additional_options });
       });
     } else {
+      const price = parseInt(card.dataset.price, 10) || 0;
       card.addEventListener("click", () => {
         document.querySelectorAll(`.option-card[data-category="${category}"]`).forEach(c => c.classList.remove("selected"));
         card.classList.add("selected");
@@ -118,8 +161,17 @@ document.addEventListener("turbo:load", () => {
     };
 
     if (selections.style) addLine("Style: " + selections.style, 0);
-    if (selections.wall_color) addLine(`Wall Color: ${selections.wall_color.value}`, selections.wall_color.price);
-    if (selections.floor_texture) addLine(`Floor Texture: ${selections.floor_texture.value}`, selections.floor_texture.price);
+
+    if (selections.wall_color) {
+      const wallCost = selections.wall_color.pricePerM2 * apartmentSize;
+      addLine(`Wall Color: ${selections.wall_color.value}`, wallCost);
+    }
+
+    if (selections.floor_texture) {
+      const floorCost = selections.floor_texture.pricePerM2 * apartmentSize;
+      addLine(`Floor Texture: ${selections.floor_texture.value}`, floorCost);
+    }
+
     if (selections.lighting) addLine(`Lighting: ${selections.lighting.value}`, selections.lighting.price);
     selections.additional_options.forEach(opt => addLine(opt.value, opt.price));
 
@@ -132,7 +184,6 @@ document.addEventListener("turbo:load", () => {
   const finishBtn = document.getElementById("finish-configurator");
   if (finishBtn) {
     finishBtn.addEventListener("click", () => {
-      // Make sure summary is up-to-date
       generateSummary();
 
       const finalPayload = {
@@ -165,6 +216,50 @@ document.addEventListener("turbo:load", () => {
       });
     });
   }
+
+  // -----------------
+  // Wall color hover effect
+  // -----------------
+  document.querySelectorAll('.option-card[data-category="wall_color"]').forEach(card => {
+    const originalBackground = card.style.backgroundColor || '';
+    const originalColor = card.style.color || '';
+
+    card.addEventListener('mouseenter', () => {
+      if (card !== selectedWallColorCard) {
+        card.style.backgroundColor = card.dataset.color;
+        card.style.color = '#000';
+      }
+    });
+
+    card.addEventListener('mouseleave', () => {
+      if (card !== selectedWallColorCard) {
+        card.style.backgroundColor = originalBackground;
+        card.style.color = originalColor;
+      }
+    });
+  });
+
+  // -----------------
+  // Floor texture hover effect
+  // -----------------
+  document.querySelectorAll('.option-card[data-category="floor_texture"]').forEach(card => {
+    const originalBackground = card.style.backgroundImage || '';
+    const originalColor = card.style.color || '';
+
+    card.addEventListener('mouseenter', () => {
+      if (card !== selectedFloorCard) {
+        card.style.backgroundImage = `url('/images/floors/${card.dataset.value.toLowerCase().replace(/\s+/g, '_')}.png')`;
+        card.style.color = '#000';
+      }
+    });
+
+    card.addEventListener('mouseleave', () => {
+      if (card !== selectedFloorCard) {
+        card.style.backgroundImage = originalBackground;
+        card.style.color = originalColor;
+      }
+    });
+  });
 
   // -----------------
   // Init

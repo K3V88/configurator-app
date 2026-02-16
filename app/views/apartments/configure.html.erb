@@ -3,7 +3,8 @@
      data-update-url="<%= wohnung_apartment_configuration_path(@wohnung, @apartment) %>"
      data-apartment-id="<%= @apartment.id %>"
      data-wohnung-id="<%= @wohnung.id %>"
-     data-base-price="<%= @apartment.price %>">
+     data-base-price="<%= @apartment.price %>"
+     data-apartment-size="<%= @apartment.size %>">  
 
   <h1>Configure Apartment – Floor <%= @apartment.floor %></h1>
 
@@ -48,14 +49,32 @@
 
       <% styles.each do |s| %>
         <div class="style-card" data-style="<%= s[:name] %>">
-          <h4><%= s[:title] %></h4>
-          <ul>
-            <li><strong>Materials:</strong> <%= s[:materials] %></li>
-            <li><strong>Walls:</strong> <%= s[:walls] %></li>
-            <li><strong>Lighting:</strong> <%= s[:lighting] %></li>
-            <li><strong>Technology:</strong> <%= s[:technology] %></li>
-            <li><strong>Brands:</strong> <%= s[:brands] %></li>
-          </ul>
+          <h4 class="text-center mb-3"><%= s[:title] %></h4>
+
+          <div class="style-topic">
+            <strong>Materials</strong>
+            <p><%= s[:materials] %></p>
+          </div>
+
+          <div class="style-topic">
+            <strong>Walls</strong>
+            <p><%= s[:walls] %></p>
+          </div>
+
+          <div class="style-topic">
+            <strong>Lighting</strong>
+            <p><%= s[:lighting] %></p>
+          </div>
+
+          <div class="style-topic">
+            <strong>Technology</strong>
+            <p><%= s[:technology] %></p>
+          </div>
+
+          <div class="style-topic">
+            <strong>Brands</strong>
+            <p><%= s[:brands] %></p>
+          </div>
         </div>
       <% end %>
     </div>
@@ -70,29 +89,60 @@
   <div class="step" id="step-4" style="display:none; max-width:700px; margin:2rem auto; text-align:left;">
     <h3 class="mb-4 text-center">Design Packages</h3>
 
-    <h4>Wall Colors</h4>
-    <div class="option-grid" id="wall-colors">
-      <% wall_colors = [{name: "Soft White", price: 0},{name: "Warm Beige", price: 50},{name: "Slate Gray", price: 70},{name: "Pastel Blue", price: 60},{name: "Olive Green", price: 80}] %>
-      <% wall_colors.each do |color| %>
-        <div class="option-card" data-category="wall_color" data-value="<%= color[:name] %>" data-price="<%= color[:price] %>">
-          <%= color[:name] %> (€<%= color[:price] %>)
-        </div>
-      <% end %>
-    </div>
+<h4 class="mb-4">Wall Colors</h4>
+<div class="option-grid" id="wall-colors">
+  <% wall_colors = [
+    {name: "Soft White", price_per_m2: 0, color: "#f5f5f5"},
+    {name: "Warm Beige", price_per_m2: 50, color: "#e6d7c4"},
+    {name: "Slate Gray", price_per_m2: 70, color: "#8c8c8c"},
+    {name: "Pastel Blue", price_per_m2: 60, color: "#add8e6"},
+    {name: "Olive Green", price_per_m2: 80, color: "#a3c9a3"},
+    {name: "Charcoal", price_per_m2: 90, color: "#363636"}
+  ] %>
 
-    <h4>Floor Textures</h4>
-    <div class="option-grid" id="floor-textures">
-      <% floor_textures = [{name: "Oak Parquet", price: 150},{name: "Dark Walnut", price: 180},{name: "Ceramic Tiles", price: 100},{name: "Concrete Look", price: 120},{name: "Bamboo", price: 130}] %>
-      <% floor_textures.each do |floor| %>
-        <div class="option-card" data-category="floor_texture" data-value="<%= floor[:name] %>" data-price="<%= floor[:price] %>">
-          <%= floor[:name] %> (€<%= floor[:price] %>)
-        </div>
-      <% end %>
-    </div>
+  <% wall_colors.each do |color| %>
+<div class="option-card wall-color-card"
+     data-category="wall_color"
+     data-value="<%= color[:name] %>"
+     data-price-per-m2="<%= color[:price_per_m2] %>"
+     data-color="<%= color[:color] %>">
+  <%= color[:name] %> (€<%= color[:price_per_m2] %>/m²)
+</div>
+  <% end %>
+</div>
 
-    <h4>Lighting Design</h4>
+<h4 class="mt-4 mb-4">Floor Textures</h4>
+<div class="option-grid" id="floor-textures">
+  <% floor_textures = [
+    {name: "Oak Parquet", price_per_m2: 150},
+    {name: "Dark Walnut", price_per_m2: 180},
+    {name: "Ceramic Tiles", price_per_m2: 100},
+    {name: "Concrete Look", price_per_m2: 120},
+    {name: "Bamboo", price_per_m2: 130},
+    {name: "Herringbone Pattern", price_per_m2: 200}
+  ] %>
+
+  <% floor_textures.each do |floor| %>
+    <div class="option-card"
+         data-category="floor_texture"
+         data-value="<%= floor[:name] %>"
+         data-price-per-m2="<%= floor[:price_per_m2] %>">
+      <%= floor[:name] %> (€<%= floor[:price_per_m2] %>/m²)
+    </div>
+  <% end %>
+</div>
+
+
+    <h4 class="mt-4 mb-4">Lighting Design</h4>
     <div class="option-grid" id="lighting-design">
-      <% lighting_options = [{name: "Minimal LED", price: 0},{name: "Dimmable Spots", price: 50},{name: "Smart Lights", price: 120},{name: "Pendant Fixtures", price: 80},{name: "Architectural Lighting", price: 200}] %>
+      <% lighting_options = [
+        {name: "Minimal LED", price: 0},
+        {name: "Dimmable Spots", price: 50},
+        {name: "Smart Lights", price: 120},
+        {name: "Pendant Fixtures", price: 80},
+        {name: "Architectural Lighting", price: 200},
+        {name: "Custom Design", price: 300}
+        ] %>
       <% lighting_options.each do |light| %>
         <div class="option-card" data-category="lighting" data-value="<%= light[:name] %>" data-price="<%= light[:price] %>">
           <%= light[:name] %> (€<%= light[:price] %>)
@@ -106,85 +156,98 @@
     </div>
   </div>
 
-<!-- STEP 5: Additional Options -->
-<div class="step"
-     id="step-5"
-     style="display:none; max-width:700px; margin:2rem auto; text-align:left;">
+  <!-- STEP 5: Additional Options -->
+  <div class="step" id="step-5" style="display:none; max-width:700px; margin:2rem auto; text-align:left;">
+    <h3 class="mb-4 text-center">Additional Options</h3>
 
-  <h3 class="mb-4 text-center">Additional Options</h3>
+    <div class="option-grid" id="additional-options">
+      <% additional_options = [
+        {name: "Plants Package", description: "We buy plants for an optimal indoor climate", price: 100},
+        {name: "Branded Textile", description: "Duvets, towels, blankets", price: 80},
+        {name: "Art Pieces", description: "Decorative artwork to complement your style", price: 200},
+        {name: "Custom Furniture", description: "Tailored furniture matching your style", price: 400}
+      ] %>
 
-  <div class="option-grid" id="additional-options">
-    <% additional_options = [
-      {name: "Plants Package", description: "We buy plants for an optimal indoor climate", price: 100},
-      {name: "Branded Textile", description: "Duvets, towels, blankets", price: 80},
-      {name: "Art Pieces", description: "Decorative artwork to complement your style", price: 200},
-      {name: "Custom Furniture", description: "Tailored furniture matching your style", price: 400}
-    ] %>
+      <% additional_options.each do |opt| %>
+        <div class="option-card"
+             data-category="additional_option"
+             data-value="<%= opt[:name] %>"
+             data-price="<%= opt[:price] %>">
+          <strong><%= opt[:name] %></strong>
+          <p style="font-size:0.9rem; margin:0.25rem 0;"><%= opt[:description] %></p>
+          <span>€<%= opt[:price] %></span>
+        </div>
+      <% end %>
+    </div>
 
-    <% additional_options.each do |opt| %>
-      <div class="option-card"
-           data-category="additional_option"
-           data-value="<%= opt[:name] %>"
-           data-price="<%= opt[:price] %>">
-        <strong><%= opt[:name] %></strong>
-        <p style="font-size:0.9rem; margin:0.25rem 0;">
-          <%= opt[:description] %>
-        </p>
-        <span>€<%= opt[:price] %></span>
-      </div>
-    <% end %>
+    <div class="d-flex justify-content-between mt-4">
+      <button class="btn btn-outline-light prev-step" data-prev="4">← Back</button>
+      <button class="btn btn-outline-light next-step" data-next="6">Finish →</button>
+    </div>
   </div>
 
-  <div class="d-flex justify-content-between mt-4">
-    <button class="btn btn-outline-light prev-step" data-prev="4">← Back</button>
-    <button class="btn btn-outline-light next-step" data-next="6">Finish →</button>
+  <!-- STEP 6: Summary -->
+  <div class="step" id="step-6" style="display:none; max-width:700px; margin:2rem auto; text-align:left;">
+    <h3 class="mb-4 text-center">Summary</h3>
+
+    <div id="summary-container" style="background: rgba(255,255,255,0.05); padding:1rem; border-radius:0.5rem;">
+      <p><strong>Base Price:</strong> €<%= @apartment.price %></p>
+      <ul id="summary-options"></ul>
+      <p><strong>Total Price:</strong> €<span id="total-price"><%= @apartment.price %></span></p>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+      <button class="btn btn-outline-light prev-step" data-prev="5">← Back</button>
+      <button id="finish-configurator">Finish & Download PDF</button>
+    </div>
   </div>
+
 </div>
-
-<!-- STEP 6: Summary -->
-<div class="step"
-     id="step-6"
-     style="display:none; max-width:700px; margin:2rem auto; text-align:left;">
-
-  <h3 class="mb-4 text-center">Summary</h3>
-
-  <div id="summary-container"
-       style="background: rgba(255,255,255,0.05); padding:1rem; border-radius:0.5rem;">
-    <p><strong>Base Price:</strong> €<%= @apartment.price %></p>
-
-    <ul id="summary-options">
-      <!-- populated by JS -->
-    </ul>
-
-    <p>
-      <strong>Total Price:</strong>
-      €<span id="total-price"><%= @apartment.price %></span>
-    </p>
-  </div>
-
-  <div class="d-flex justify-content-between mt-4">
-    <button class="btn btn-outline-light prev-step" data-prev="5">← Back</button>
-<button id="finish-configurator">Finish & Download PDF</button>
-
-  </div>
-</div>
-
 
 <style>
-/* Style grids */
-.style-grid, .option-grid {
+/* Grids */
+.style-grid {
   display: grid;
+  grid-template-columns: 1fr; /* stack vertically */
   gap: 1rem;
 }
-.style-grid { grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); }
-.option-grid { grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); }
+
+.option-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+}
+
+/* Cards */
 .style-card, .option-card {
   border: 1px solid rgba(255,255,255,0.3);
   padding: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-align: center;
 }
 .style-card:hover, .option-card:hover { background: rgba(255,255,255,0.05); }
 .style-card.selected, .option-card.selected { border-color: white; background: rgba(255,255,255,0.1); }
+
+/* Style card topics */
+.style-card .style-topic {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+.style-card .style-topic strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+.style-card .style-topic p {
+  margin: 0;
+}
+
+.wall-color-card {
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.wall-color-card:hover {
+  color: #000; /* make text visible on light colors */
+}
+
 </style>
