@@ -14,7 +14,11 @@
 </head>
 <body>
   <h1>Apartment Configuration Summary</h1>
-  <h2>Floor <%= apartment.floor %> – <%= apartment.size %> m², <%= apartment.rooms %> rooms</h2>
+  <h2>
+    Floor <%= apartment.floor %> –
+    <%= apartment.size %> m²,
+    <%= apartment.rooms %> rooms
+  </h2>
 
   <% if apartment.image.attached? %>
     <div style="text-align:center; margin:1rem 0;">
@@ -22,44 +26,62 @@
     </div>
   <% end %>
 
-  <% base_price = apartment.price %>
-  <% total_price = base_price %>
+  <% data = config.data || {} %>
 
   <div class="section">
-    <p><strong>Base Price:</strong> €<%= base_price %></p>
+    <p>
+      <strong>Base Price:</strong>
+      €<%= number_with_delimiter(data["base_price"] || apartment.price) %>
+    </p>
 
     <ul>
-      <% if config.data["style"].present? %>
-        <li><strong>Style:</strong> <%= config.data["style"] %></li>
+
+      <% if data.dig("style", "value").present? %>
+        <li>
+          <strong>Style:</strong>
+          <%= data.dig("style", "value") %>
+        </li>
       <% end %>
 
-      <% if config.data["wall_color"].present? %>
-        <% wall_price = config.data["wall_color_price"].to_i %>
-        <% total_price += wall_price %>
-        <li>Wall Color: <%= config.data["wall_color"] %> (€<%= wall_price %>)</li>
+      <% if data["wall_color"].present? %>
+        <li>
+          Wall Color:
+          <%= data.dig("wall_color", "value") %>
+          (€<%= number_with_delimiter(data.dig("wall_color", "totalPrice")) %>)
+        </li>
       <% end %>
 
-      <% if config.data["floor_texture"].present? %>
-        <% floor_price = config.data["floor_texture_price"].to_i %>
-        <% total_price += floor_price %>
-        <li>Floor Texture: <%= config.data["floor_texture"] %> (€<%= floor_price %>)</li>
+      <% if data["floor_texture"].present? %>
+        <li>
+          Floor Texture:
+          <%= data.dig("floor_texture", "value") %>
+          (€<%= number_with_delimiter(data.dig("floor_texture", "totalPrice")) %>)
+        </li>
       <% end %>
 
-      <% if config.data["lighting"].present? %>
-        <% light_price = config.data["lighting_price"].to_i %>
-        <% total_price += light_price %>
-        <li>Lighting: <%= config.data["lighting"] %> (€<%= light_price %>)</li>
+      <% if data["lighting"].present? %>
+        <li>
+          Lighting:
+          <%= data.dig("lighting", "value") %>
+          (€<%= number_with_delimiter(data.dig("lighting", "price")) %>)
+        </li>
       <% end %>
 
-      <% if config.data["additional_options"].present? %>
-        <% config.data["additional_options"].each do |opt| %>
-          <% total_price += opt["price"].to_i %>
-          <li><%= opt["value"] %> (€<%= opt["price"] %>)</li>
+      <% if data["additional_options"].present? %>
+        <% data["additional_options"].each do |opt| %>
+          <li>
+            <%= opt["value"] %>
+            (€<%= number_with_delimiter(opt["price"]) %>)
+          </li>
         <% end %>
       <% end %>
+
     </ul>
 
-    <p class="total">Total Price: €<%= total_price %></p>
+    <p class="total">
+      Total Price:
+      €<%= number_with_delimiter(total_price) %>
+    </p>
   </div>
 
   <% if apartment.description.present? %>

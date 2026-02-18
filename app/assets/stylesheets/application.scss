@@ -13,3 +13,59 @@
   margin-left: 10px;
   font-weight: bold;
 }
+
+/* Main 2-column layout */
+.apartment-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+  margin: 3rem 0;
+}
+
+/* Image */
+.hero-image img {
+  border-radius: 6px;
+}
+
+/* Details */
+.hero-details {
+  color: white;
+}
+
+/* Grid inside details */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 0.5rem;
+  column-gap: 2rem;
+}
+
+/* Labels */
+.label {
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+}
+
+/* Values */
+.value {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+/* Price emphasis */
+.price {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Divider line */
+.divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+  margin: 1rem 0;
+}
