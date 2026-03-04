@@ -85,6 +85,7 @@ class ApartmentConfigurationsController < ApplicationController
       wall_color: [:value, :pricePerM2, :totalPrice],
       floor_texture: [:value, :pricePerM2, :totalPrice],
       lighting: [:value, :price],
+      rooms: {},
       additional_options: [:value, :price]
     )
   end
@@ -93,32 +94,37 @@ class ApartmentConfigurationsController < ApplicationController
   # Price Calculation
   # --------------------------------------------------
 
-  def calculate_total_price(data)
-    base_price = data["base_price"].presence || @apartment.price
-    total = base_price.to_i
+def calculate_total_price(data)
+  base_price = data["base_price"].presence || @apartment.price
+  total = base_price.to_i
 
-    # Wall Color
-    if data["wall_color"].present?
-      total += data["wall_color"]["totalPrice"].to_i
-    end
+  if data["rooms"].present?
+    data["rooms"].each do |_, room_data|
+      # Wall Color per room
+      if room_data["wall_color"].present?
+        total += room_data["wall_color"]["totalPrice"].to_i
+      end
 
-    # Floor Texture
-    if data["floor_texture"].present?
-      total += data["floor_texture"]["totalPrice"].to_i
-    end
+      # Floor Texture per room
+      if room_data["floor_texture"].present?
+        total += room_data["floor_texture"]["totalPrice"].to_i
+      end
 
-    # Lighting
-    if data["lighting"].present?
-      total += data["lighting"]["price"].to_i
-    end
-
-    # Additional Options
-    if data["additional_options"].present?
-      data["additional_options"].each do |opt|
-        total += opt["price"].to_i
+      # Lighting per room
+      if room_data["lighting"].present?
+        total += room_data["lighting"]["price"].to_i
       end
     end
-
-    total
   end
+
+  # Additional Options (top-level)
+  if data["additional_options"].present?
+    data["additional_options"].each do |opt|
+      total += opt["price"].to_i
+    end
+  end
+
+  total
 end
+end
+

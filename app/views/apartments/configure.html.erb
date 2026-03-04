@@ -17,7 +17,6 @@
 
     <div class="hero-details">
       <div class="details-grid">
-        <!-- Row 1 -->
         <div class="label">GESCHOSS</div>
         <div class="label">ZIMMER</div>
         <div class="label">WOHNFLÄCHE</div>
@@ -27,7 +26,6 @@
 
         <div class="divider"></div>
 
-        <!-- Row 3: Außenfläche / Preis / Style -->
         <div class="label">AUSSENFLÄCHE</div>
         <div class="label">PREIS</div>
         <div class="label">STYLE</div>
@@ -37,7 +35,6 @@
 
         <div class="divider"></div>
 
-        <!-- Row 2: Aufpreis / Konfiguration -->
         <div class="label">AUFPREIS</div>
         <div class="label">KONFIGURATION</div>
         <div></div>
@@ -50,7 +47,7 @@
 
   <!-- CONFIGURATOR STEPS -->
   <div class="steps-container">
-    <div class="steps-inner" style="margin:2rem auto;">
+    <div class="steps-inner" style="margin:2rem auto; max-width:100%;">
 
       <!-- STEP 1: Welcome -->
       <div class="step" id="step-1">
@@ -59,39 +56,15 @@
         <button class="btn btn-outline-light btn-lg mt-3 next-step" data-next="2">Start Configuring</button>
       </div>
 
-      <!-- STEP 2: Explanation -->
+      <!-- STEP 2: Style Selection -->
       <div class="step" id="step-2" style="display:none;">
-        <p>This configurator works step by step. First, select a design style, then choose wall colors, floors, lighting, and additional options.</p>
-        <div class="d-flex justify-content-between mt-4">
-          <button class="btn btn-outline-light prev-step" data-prev="1">← Back</button>
-          <button class="btn btn-outline-light next-step" data-next="3">Next →</button>
-        </div>
-      </div>
-
-      <!-- STEP 3: Choose Style -->
-      <div class="step" id="step-3" style="display:none;">
         <h3 class="mb-4 mt-5 text-center">Choose Your Style</h3>
         <div class="style-grid">
           <% styles = [
-  { 
-    name: "functional", 
-    title: "Functional", 
-    image_url: "functional.jpg", 
-    description: "Practical and efficient design with a focus on usability and simplicity. Ideal for those who value clean lines, organized spaces, and a home that works seamlessly for everyday life." 
-  },
-  { 
-    name: "zeitlos", 
-    title: "Zeitlos", 
-    image_url: "zeitlos.jpg", 
-    description: "Timeless elegance blending classic elements with modern touches. This style emphasizes harmony, neutral tones, and enduring aesthetics that never go out of fashion." 
-  },
-  { 
-    name: "hochwertig", 
-    title: "Hochwertig", 
-    image_url: "hochwertig.jpg", 
-    description: "Premium materials and refined finishes combine to create a luxurious living space. Every detail is carefully considered to deliver sophistication, comfort, and a sense of exclusivity." 
-  }
-] %>
+            { name: "functional", title: "Functional", image_url: "functional.jpg", description: "Practical and efficient design with a focus on usability and simplicity." },
+            { name: "zeitlos", title: "Zeitlos", image_url: "zeitlos.jpg", description: "Timeless elegance blending classic elements with modern touches." },
+            { name: "hochwertig", title: "Hochwertig", image_url: "hochwertig.jpg", description: "Premium materials and refined finishes combine to create a luxurious living space." }
+          ] %>
 
           <% styles.each do |s| %>
             <div class="style-card" data-style="<%= s[:name] %>">
@@ -107,16 +80,19 @@
             </div>
           <% end %>
         </div>
-
         <div class="d-flex justify-content-between mt-4">
-          <button class="btn btn-outline-light prev-step" data-prev="2">← Back</button>
-          <button class="btn btn-outline-light next-step" data-next="4">Next →</button>
+          <button class="btn btn-outline-light prev-step" data-prev="1">← Back</button>
+          <button class="btn btn-outline-light next-step" data-next="3">Next →</button>
         </div>
       </div>
 
-      <!-- STEP 4: Design Packages -->
-      <div class="step" id="step-4" style="display:none;">
-        <h3 class="mb-4 text-center">Design Packages</h3>
+      <!-- STEP 3: Room Configuration -->
+      <div class="step" id="step-3" style="display:none;">
+        <% rooms = [
+          { name: "Living Room", image: "room_living.jpg" },
+          { name: "Kitchen", image: "room_kitchen.jpg" },
+          { name: "Bathroom", image: "room_bathroom.jpg" }
+        ] %>
 
         <% wall_colors = [
           {name: "Soft White", price_per_m2: 0, color: "#f5f5f5"},
@@ -127,141 +103,183 @@
           {name: "Charcoal", price_per_m2: 90, color: "#363636"}
         ] %>
 
-        <h4 class="mb-3 text-center">Wall Colors</h4>
-        <div class="option-grid wall-colors-grid" style="grid-template-columns: gap:1.5rem;">
-          <% wall_colors.each do |w| %>
-            <div class="color-option" data-category="wall_color"
-                 data-value="<%= w[:name] %>"
-                 data-price-per-m2="<%= w[:price_per_m2] %>"
-                 data-color="<%= w[:color] %>"
-                 style="text-align:center; cursor:pointer;">
-              <div class="color-name" style="margin-bottom:0.5rem; font-weight:500; color:white;">
-                <%= w[:name] %>
-              </div>
-              <div class="color-circle" style="
-                width:50px;
-                height:50px;
-                border-radius:50%;
-                background-color:<%= w[:color] %>;
-                border:2px solid rgba(255,255,255,0.3);
-                margin:0 auto;
-                transition: all 0.2s ease;
-              "></div>
-              <div class="color-price" style="margin-top:0.25rem; font-size:0.85rem; color:rgba(255,255,255,0.7);">
-                €<%= w[:price_per_m2] %>/m²
-              </div>
-            </div>
-          <% end %>
-        </div>
-
-        <%# Floor textures, lighting, additional options same as before, using .option-card %>
-        <!-- Floors -->
         <% floor_textures = [
           {name: "Oak Parquet", price_per_m2: 150},
           {name: "Dark Walnut", price_per_m2: 180},
           {name: "Ceramic Tiles", price_per_m2: 100},
           {name: "Concrete Look", price_per_m2: 120},
           {name: "Bamboo", price_per_m2: 130},
-          {name: "Herringbone Pattern", price_per_m2: 200}
+          {name: "Herringbone", price_per_m2: 200}
         ] %>
-        <h4 class="mt-4 mb-3 text-center">Floor Textures</h4>
-        <div class="option-grid">
-          <% floor_textures.each do |f| %>
-            <div class="option-card" data-category="floor_texture"
-                 data-value="<%= f[:name] %>"
-                 data-price-per-m2="<%= f[:price_per_m2] %>">
-              <%= f[:name] %> (€<%= f[:price_per_m2] %>/m²)
-            </div>
-          <% end %>
-        </div>
 
-        <%# Lighting options %>
+        <% floor_texture_images = {
+          "Oak Parquet" => "mat_oak.png",
+          "Dark Walnut" => "mat_walnut.png",
+          "Ceramic Tiles" => "mat_ceramic.png",
+          "Concrete Look" => "mat_cement.png",
+          "Bamboo" => "mat_bamboo.png",
+          "Herringbone" => "mat_herringbone.png"
+        } %>
+
         <% lighting_options = [
-          {name: "Minimal LED", price: 0},
-          {name: "Dimmable Spots", price: 50},
-          {name: "Smart Lights", price: 120},
-          {name: "Pendant Fixtures", price: 80},
-          {name: "Architectural Lighting", price: 200},
-          {name: "Custom Design", price: 300}
+          {name: "Minimal LED", price: 0, img: "light_led.png"},
+          {name: "Dimmable Spots", price: 50, img: "light_dimmable.png"},
+          {name: "Smart Lights", price: 120, img: "light_smart.png"},
+          {name: "Pendant Fixtures", price: 80, img: "light_pendants.png"},
+          {name: "Architectural", price: 200, img: "light_architectural.png"},
+          {name: "Custom Design", price: 300, img: "light_custom.png"}
         ] %>
-        <h4 class="mt-4 mb-3 text-center">Lighting</h4>
-        <div class="option-grid">
-          <% lighting_options.each do |l| %>
-            <div class="option-card" data-category="lighting" data-value="<%= l[:name] %>" data-price="<%= l[:price] %>">
-              <%= l[:name] %> (€<%= l[:price] %>)
+
+        <% rooms.each do |room| %>
+          <div class="room-configurator mb-5" data-room="<%= room[:name].parameterize %>">
+            <h4 class="mb-5"><%= room[:name] %></h4>
+            <div class="d-flex flex-wrap align-items-start gap-4">
+
+              <!-- Left: Selectors -->
+              <div class="selectors" style="flex:1; min-width:300px;">
+
+                <!-- Wall Colors -->
+                <div class="wall-colors mb-5">
+                  <strong>WALL COLORS</strong>
+                  <div class="option-grid" style="gap:1.5rem; margin-top:0.5rem;">
+                    <% wall_colors.each do |w| %>
+                      <div class="color-option" data-category="wall_color" data-room="<%= room[:name].parameterize %>" data-value="<%= w[:name] %>" data-price-per-m2="<%= w[:price_per_m2] %>" style="cursor:pointer; text-align:center;">
+                        <div class="color-circle" style="width:50px; height:50px; border-radius:50%; background-color:<%= w[:color] %>; border:2px solid rgba(255,255,255,0.3); margin:auto; transition: all 0.2s ease;"></div>
+                        <div style="font-size:0.75rem; color:white; margin-top:0.25rem;"><%= w[:name] %></div>
+                         <div style="font-size:0.75rem; color:white; margin-top:0.25rem;">€<%= w[:price_per_m2] %></div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+
+                <!-- Floor Textures -->
+                <div class="floor-textures mb-5 mt-5" style="gap:1.5rem; margin-top:0.5rem;">
+                  <strong>FLOOR TEXTURES</strong>
+                  <div class="option-grid three-per-row mt-2" style="gap:1.5rem; margin-top:0.5rem;" >
+                    <% floor_textures.each do |f| %>
+                      <div class="texture-wrapper" data-category="floor_texture" data-room="<%= room[:name].parameterize %>" data-value="<%= f[:name] %>" data-price-per-m2="<%= f[:price_per_m2] %>">
+                        <div class="texture-label" style="text-align:center; font-size:0.8rem;"><strong><%= f[:name] %></strong><br>€<%= f[:price_per_m2] %>/m²</div>
+                        <div class="texture-box" style="background-image:url('<%= asset_path(floor_texture_images[f[:name]]) %>'); width:150px; height:70px; 
+                        background-size:cover; background-position:center; border-radius:6px; margin-top:0.25rem;"></div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+
+                <!-- Lighting Carousel -->
+<div class="lighting mt-5 mb-5">
+  <strong>LIGHTING</strong>
+  <div class="lighting-slider" style="position:relative; width:100%; max-width:500px; margin-top:1rem;">
+    <button class="slider-prev" style="position:absolute; left:0; top:50%; transform:translateY(-50%); z-index:10;">&#8592;</button>
+
+    <div class="slider-image-container" style="width:100%; height:350px; border-radius:8px; overflow:hidden;">
+      <% lighting_options.each_with_index do |l, index| %>
+        <img src="<%= asset_path(l[:img]) %>" 
+             alt="<%= l[:name] %>" 
+             class="slider-image" 
+             data-value="<%= l[:name] %>" 
+             data-price="<%= l[:price] %>"
+             data-category="lighting"
+             data-room="<%= room[:name].parameterize %>"
+             style="width:100%; height:100%; object-fit:cover; display: <%= index == 0 ? 'block' : 'none' %>;">
+      <% end %>
+    </div>
+
+    <button class="slider-next" style="position:absolute; right:0; top:50%; transform:translateY(-50%); z-index:10;">&#8594;</button>
+  </div>
+
+  <div class="slider-label mt-2 text-center" style="color:white; font-size:0.9rem;">
+    <strong class="current-lighting-name"><%= lighting_options.first[:name] %></strong> – €<span class="current-lighting-price"><%= lighting_options.first[:price] %></span>
+  </div>
+</div>
+
+              </div>
+
+              <!-- Right: Room Image -->
+              <div class="room-image" style="flex:1; min-width:250px; text-align:right;">
+                <%= image_tag room[:image], style: "width:100%; height:auto; border-radius:0.5rem;" %>
+              </div>
+
             </div>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
 
         <div class="d-flex justify-content-between mt-4">
-          <button class="btn btn-outline-light prev-step" data-prev="3">← Back</button>
-          <button class="btn btn-outline-light next-step" data-next="5">Next →</button>
+          <button class="btn btn-outline-light prev-step" data-prev="2">← Back</button>
+          <button class="btn btn-outline-light next-step" data-next="4">Next →</button>
         </div>
       </div>
 
-<!-- STEP 5: Additional Options -->
-<div class="step" id="step-5" style="display:none;">
+<!-- STEP 4: Additional Options -->
+<div class="step" id="step-4" style="display:none;">
   <h3 class="mb-4 text-center">Additional Options</h3>
 
   <% additional_options = [
-    {name: "Plants Package", description: "We buy plants for an optimal indoor climate", price: 100},
-    {name: "Branded Textile", description: "Duvets, towels, blankets", price: 80},
-    {name: "Art Pieces", description: "Decorative artwork to complement your style", price: 200},
-    {name: "Custom Furniture", description: "Tailored furniture matching your style", price: 400}
+    {name: "Plants Package", description: "We buy plants for an optimal indoor climate", price: 100, image: "plants_package.jpg"},
+    {name: "Branded Textile", description: "Duvets, towels, blankets", price: 80, image: "branded_textile.jpg"},
+    {name: "Art Pieces", description: "Decorative artwork to complement your style", price: 200, image: "art_pieces.jpg"},
+    {name: "Custom Furniture", description: "Tailored furniture matching your style", price: 400, image: "custom_furniture.jpg"}
   ] %>
 
-  <div class="option-grid">
+  <div class="option-grid two-per-row" style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;">
+
     <% additional_options.each do |opt| %>
-      <div class="option-card"
-           data-category="additional_option"
-           data-value="<%= opt[:name] %>"
-           data-price="<%= opt[:price] %>">
-        <strong><%= opt[:name] %></strong>
-        <p style="font-size:0.9rem; margin:0.25rem 0;"><%= opt[:description] %></p>
-        <span>€<%= opt[:price] %></span>
+      <div class="option-card" data-category="additional_option" data-value="<%= opt[:name] %>" data-price="<%= opt[:price] %>" style="display:flex; flex-direction:column; align-items:center; padding:1rem; border:1px solid rgba(255,255,255,0.3); border-radius:0.5rem; cursor:pointer; transition:all 0.2s ease; background:rgba(255,255,255,0.02);">
+
+        <strong style="font-size:1.1rem; margin-bottom:0.25rem;"><%= opt[:name] %></strong>
+        <p style="font-size:0.85rem; text-align:center; color:rgba(255,255,255,0.8); margin-bottom:0.5rem;"><%= opt[:description] %></p>
+        
+        <% if opt[:image].present? %>
+          <div class="option-image" style="width:100%; max-width:200px; margin-bottom:0.5rem;">
+            <%= image_tag opt[:image], style: "width:100%; height:auto; border-radius:0.5rem;" %>
+          </div>
+        <% end %>
+
+        <span style="font-size:1.2rem; font-weight:bold; margin-top:auto;">€<%= opt[:price] %></span>
       </div>
     <% end %>
+
   </div>
 
   <div class="d-flex justify-content-between mt-4">
-    <button class="btn btn-outline-light prev-step" data-prev="4">← Back</button>
-    <button class="btn btn-outline-light next-step" data-next="6">Finish →</button>
+    <button class="btn btn-outline-light prev-step" data-prev="3">← Back</button>
+    <button class="btn btn-outline-light next-step" data-next="5">Next →</button>
   </div>
 </div>
 
-<!-- STEP 6: Summary -->
-<div class="step" id="step-6" style="display:none;">
-  <h3 class="mb-4 text-center">Summary</h3>
-  <div id="summary-container">
-    <p><strong>Base Price:</strong> €<%= @apartment.price %></p>
-    <ul id="summary-options"></ul>
-    <p><strong>Total Price:</strong> €<span id="total-price"><%= @apartment.price %></span></p>
-  </div>
-  <div class="d-flex justify-content-between mt-4">
-    <button class="btn btn-outline-light prev-step" data-prev="5">← Back</button>
-    <button id="finish-configurator" class="btn btn-light">Finish & Download PDF</button>
-  </div>
-</div>
-
+      <!-- STEP 5: Summary -->
+      <div class="step" id="step-5" style="display:none;">
+        <h3 class="mb-4 text-center">Summary</h3>
+        <div id="summary-container">
+          <p><strong>Base Price:</strong> €<%= @apartment.price %></p>
+          <ul id="summary-options"></ul>
+          <p><strong>Total Price:</strong> €<span id="total-price"><%= @apartment.price %></span></p>
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+          <button class="btn btn-outline-light prev-step" data-prev="4">← Back</button>
+          <button id="finish-configurator" class="btn btn-light">Finish & Download PDF</button>
+        </div>
+      </div>
 
     </div>
   </div>
 </div>
 
+<!-- CSS -->
 <style>
-  /* Container & Hero */
-  .apartment-hero { display:flex; flex-wrap:wrap; gap:2rem; max-width:100%; margin:2rem auto; }
-  .hero-image { flex:1 1 400px; }
-  .hero-details { flex:1 1 300px; }
+  .apartment-hero { display:flex; flex-wrap:wrap; gap:4rem; max-width:100%; margin:2rem auto; }
+  .hero-image { flex:1 1 200px; }
+  .hero-details { flex:1 1 200px; }
   .details-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem; }
   .divider { grid-column:1 / -1; height:1px; background:rgba(255,255,255,0.2); margin:0.5rem 0; }
 
-  /* Steps & Grids */
   .steps-container { max-width:100%; margin:2rem auto; }
   .steps-inner { max-width:100%; margin:2rem auto; }
-  .style-grid, .option-grid { display:grid; grid-auto-flow: column;gap:1.5rem; justify-content: center; }
 
-  /* Cards */
+  .style-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+
+  .option-grid { display:flex; flex-direction:row; gap:0.5rem; }
+
   .style-card, .option-card {
     border:1px solid rgba(255,255,255,0.3);
     padding:1rem;
@@ -270,10 +288,134 @@
     transition:all 0.2s ease;
     background:rgba(255,255,255,0.02);
   }
+
   .style-card:hover, .option-card:hover { background: rgba(255,255,255,0.05); }
   .style-card.selected, .option-card.selected { border-color:white; background: rgba(255,255,255,0.1); }
 
-  /* Wall color circles */
   .color-option:hover .color-circle { border-color:white; }
   .color-option.selected .color-circle { border-color:white; box-shadow:0 0 8px rgba(255,255,255,0.6); }
+
+  .option-grid.three-per-row {
+    display:grid;
+    grid-template-columns: repeat(3, max-content);
+    gap: 0.5rem;
+    justify-content: start;
+  }
+
+  .option-grid.three-per-row .texture-wrapper { display:flex; flex-direction:column; align-items:flex-start; }
+
+  .option-grid.three-per-row .texture-box { width:280px; height:250px; background-size:cover; background-position:center; border-radius:8px; margin-top:0.5rem; border:2px solid transparent; transition:all 0.2s ease; cursor:pointer; }
+
+  .option-grid.three-per-row .texture-label { text-align:center; font-size:0.9rem; margin-bottom:0.25rem; }
+
+  .option-grid.three-per-row .texture-wrapper.selected .texture-box { border-color:white; box-shadow:0 0 8px rgba(255,255,255,0.6); }
+
+  /* Carousel buttons */
+/* Lighting slider buttons */
+.lighting-slider .slider-prev,
+.lighting-slider .slider-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin: 10px;
+}
+
+.lighting-slider .slider-prev:hover,
+.lighting-slider .slider-next:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lighting-slider .slider-prev {
+  left: 10px;
+}
+
+.lighting-slider .slider-next {
+  right: 10px;
+}
+
+
+  .slider-image {
+  border: 3px solid transparent;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.slider-image.selected {
+  border-color: white;
+  box-shadow: 0 0 8px rgba(255,255,255,0.6);
+}
 </style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll(".lighting-slider").forEach(slider => {
+    const images = slider.querySelectorAll(".slider-image");
+    const prevBtn = slider.querySelector(".slider-prev");
+    const nextBtn = slider.querySelector(".slider-next");
+
+    const labelContainer = slider.parentElement.querySelector(".slider-label");
+    const nameLabel = labelContainer.querySelector(".current-lighting-name");
+    const priceLabel = labelContainer.querySelector(".current-lighting-price");
+
+    let currentIndex = 0;
+
+    function showImage(index, highlight = false) {
+      images.forEach((img, i) => {
+        img.style.display = i === index ? "block" : "none";
+        if (highlight) {
+          img.classList.toggle("selected", i === index);
+        } else {
+          img.classList.remove("selected");
+        }
+      });
+      const img = images[index];
+      nameLabel.textContent = img.dataset.value;
+      priceLabel.textContent = img.dataset.price;
+    }
+
+    prevBtn.addEventListener("click", () => {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      showImage(currentIndex); // arrows just change image, no border highlight
+    });
+
+    nextBtn.addEventListener("click", () => {
+      currentIndex = (currentIndex + 1) % images.length;
+      showImage(currentIndex); // arrows just change image, no border highlight
+    });
+
+    // Click to select
+    images.forEach((img, index) => {
+      img.addEventListener("click", () => {
+        currentIndex = index;
+        showImage(currentIndex, true); // only highlight when clicked
+
+        const room = img.dataset.room;
+        const value = img.dataset.value;
+        const price = parseInt(img.dataset.price, 10) || 0;
+
+        selections.rooms[room] = selections.rooms[room] || {};
+        selections.rooms[room].lighting = { value, price };
+        saveSelection();
+      });
+    });
+
+    // Initial display without highlight
+    showImage(currentIndex, false);
+  });
+});
+</script>
